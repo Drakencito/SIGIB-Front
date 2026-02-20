@@ -1,0 +1,42 @@
+.welcome-page { padding: 3rem 3.5rem; }
+
+.welcome-hero { margin-bottom: 3rem; }
+.welcome-fecha {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #778D76;
+  display: block;
+  margin-bottom: 0.6rem;
+}
+.welcome-hero h1 {
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: #1a2e2b;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+.welcome-hero h1 strong { font-weight: 800; }
+.welcome-hero p { color: #ACABA5; font-size: 0.95rem; }
+
+.welcome-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 860px;
+}
+.welcome-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.welcome-card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.welcome-card p {
+  font-size: 0.82rem;
+  color: #ACABA5;
+}
