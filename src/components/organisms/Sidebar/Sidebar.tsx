@@ -1,7 +1,12 @@
-import { useState } from 'react'
+import { useState, forwardRef } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { Package, FileText, Ticket, Home, Search, LogOut, User } from 'lucide-react'
+import { useAuth } from '../../../lib/store/AuthContext'
 import './Sidebar.css'
+
+interface Props {
+  topPx: number
+}
 
 const items = [
   { to: '/inicio',      icon: Home,     label: 'Inicio' },
@@ -10,23 +15,24 @@ const items = [
   { to: '/tickets',     icon: Ticket,   label: 'Tickets de Soporte' },
 ]
 
-function Sidebar() {
-  const [open, setOpen] = useState<boolean>(false)
+const Sidebar = forwardRef<HTMLElement, Props>(({ topPx }, ref) => {
+  const [open, setOpen]         = useState<boolean>(false)
   const [busqueda, setBusqueda] = useState<string>('')
-  const navigate = useNavigate()
+  const { usuario, logout }     = useAuth()
+  const navigate                = useNavigate()
 
   const handleLogout = () => {
+    logout()
     navigate('/')
   }
 
   return (
     <aside
+      ref={ref}
       className={`sidebar ${open ? 'open' : ''}`}
+      style={{ top: `${topPx}px` }}
       onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => {
-        setOpen(false)
-        setBusqueda('')
-      }}
+      onMouseLeave={() => { setOpen(false); setBusqueda('') }}
     >
       <div className="sidebar-profile">
         <div className="sidebar-avatar">
@@ -35,7 +41,7 @@ function Sidebar() {
         {open && (
           <div className="sidebar-greet">
             <span className="sidebar-hola">Hola,</span>
-            <span className="sidebar-nombre">Administrador</span>
+            <span className="sidebar-nombre">{usuario?.nombre ?? 'Usuario'}</span>
           </div>
         )}
       </div>
@@ -57,16 +63,12 @@ function Sidebar() {
 
       <nav className="sidebar-nav">
         {items
-          .filter(item =>
-            !busqueda || item.label.toLowerCase().includes(busqueda.toLowerCase())
-          )
+          .filter(item => !busqueda || item.label.toLowerCase().includes(busqueda.toLowerCase()))
           .map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
               to={to}
-              className={({ isActive }) =>
-                `sidebar-item ${isActive ? 'active' : ''}`
-              }
+              className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}
             >
               <span className="sidebar-icon"><Icon size={20} /></span>
               {open && <span className="sidebar-label">{label}</span>}
@@ -81,9 +83,9 @@ function Sidebar() {
           {open && <span className="sidebar-label">Cerrar Sesión</span>}
         </button>
       </div>
-
     </aside>
   )
-}
+})
 
+Sidebar.displayName = 'Sidebar'
 export default Sidebar

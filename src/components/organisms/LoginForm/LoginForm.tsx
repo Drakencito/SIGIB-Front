@@ -1,18 +1,28 @@
 import { useState } from 'react'
-import { Eye, EyeOff } from 'lucide-react'
+import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import './Login.css'
+import { useAuth } from '../../../lib/store/AuthContext'
+import FormField from '../../molecules/Formfield/FormField'
+import PasswordField from '../../molecules/PasswordField/PasswordField'
+import Button from '../../atoms/Button/Button'
+import './LoginForm.css'
 
-
-function Login() {
-  const [usuario, setUsuario]   = useState<string>('')
+function LoginForm() {
+  const [clues, setClues]       = useState<string>('')
   const [password, setPassword] = useState<string>('')
-  const [verPwd, setVerPwd]     = useState<boolean>(false)
-  const navigate = useNavigate()
+  const [error, setError]       = useState<string>('')
+  const { login }               = useAuth()
+  const navigate                = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    navigate('/Inicio')
+    setError('')
+    const ok = login(clues, password)
+    if (ok) {
+      navigate('/inicio')
+    } else {
+      setError('CLUES o contraseña incorrectos')
+    }
   }
 
   return (
@@ -24,13 +34,13 @@ function Login() {
       <div className="deco deco-4" />
 
       <div className="login-img-bottom-right">
-      <img src="/imagotipo.png" alt="" />
+        <img src="/imagotipo.png" alt="" />
       </div>
 
       <div className="login-card">
 
         <div className="card-top">
-        <img src="/Logo.png" alt="" />
+          <img src="/Logo.png" alt="" />
           <h1>Sistema Integral IMSS Bienestar</h1>
         </div>
 
@@ -44,46 +54,44 @@ function Login() {
           </div>
 
           <form onSubmit={handleSubmit}>
-            <div className="field">
-              <label htmlFor="usuario">Clues</label>
-              <input
-                id="usuario"
-                type="text"
-                placeholder="Ingresa la clues"
-                value={usuario}
-                onChange={e => setUsuario(e.target.value)}
-                required
-              />
-            </div>
 
-            <div className="field">
-              <label htmlFor="password">Contraseña</label>
-              <div className="password-wrap">
-                <input
-                  id="password"
-                  type={verPwd ? 'text' : 'password'}
-                  placeholder="Ingresa tu contraseña"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  required
-                />
-                <button
-                  type="button"
-                  className="toggle-pwd"
-                  onClick={() => setVerPwd(!verPwd)}
-                >
-                  {verPwd ? <EyeOff size={17} /> : <Eye size={17} />}
-                </button>
-              </div>
-            </div>
+            <FormField
+              id="clues"
+              label="Clues"
+              type="text"
+              placeholder="Ingresa tu CLUES"
+              value={clues}
+              onChange={e => setClues(e.target.value)}
+              required
+            />
+
+            <PasswordField
+              id="password"
+              label="Contraseña"
+              placeholder="Ingresa tu contraseña"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+
+            {error && (
+              <p style={{
+                color: '#9b2247',
+                fontSize: '0.8rem',
+                marginBottom: '1rem',
+                textAlign: 'center',
+                fontWeight: 600
+              }}>
+                {error}
+              </p>
+            )}
 
             <div className="forgot-wrap">
               <a href="#" className="link-forgot">¿Olvidaste tu contraseña?</a>
             </div>
 
-            <button type="submit" className="btn-ingresar">
-              Ingresar
-            </button>
+            <Button type="submit" className="btn-ingresar" label="Ingresar" />
+
           </form>
 
           <p className="card-footer-text">
@@ -96,4 +104,4 @@ function Login() {
   )
 }
 
-export default Login
+export default LoginForm

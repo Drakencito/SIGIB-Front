@@ -1,8 +1,9 @@
+import { forwardRef } from 'react'
 import './Footer.css'
 
-function Footer() {
+const Footer = forwardRef<HTMLElement>((_, ref) => {
   return (
-    <footer className="footer">
+    <footer className="footer" ref={ref}>
       <div className="footer-img-left">
         <img src="/Logo.png" alt="" />
       </div>
@@ -14,6 +15,7 @@ function Footer() {
       </div>
     </footer>
   )
-}
+})
 
+Footer.displayName = 'Footer'
 export default Footer

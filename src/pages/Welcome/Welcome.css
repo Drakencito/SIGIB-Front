@@ -1,42 +1,78 @@
-.welcome-page { padding: 3rem 3.5rem; }
+.welcome-page {
+  padding: 2.5rem 3rem;
+  background: #F3F3E7;
+  min-height: 100%;
+}
 
-.welcome-hero { margin-bottom: 3rem; }
+/* ── Saludo ── */
+.welcome-header {
+  margin-bottom: 1.8rem;
+}
 .welcome-fecha {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: #778D76;
   display: block;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.4rem;
 }
-.welcome-hero h1 {
-  font-size: 2.2rem;
+.welcome-header h1 {
+  font-size: 2rem;
   font-weight: 300;
   color: #1a2e2b;
-  margin-bottom: 0.5rem;
-  line-height: 1.2;
+  margin-bottom: 0.3rem;
 }
-.welcome-hero h1 strong { font-weight: 800; }
-.welcome-hero p { color: #ACABA5; font-size: 0.95rem; }
+.welcome-header h1 strong { font-weight: 800; }
+.welcome-header p {
+  font-size: 0.9rem;
+  color: #ACABA5;
+}
 
-.welcome-cards {
+/* ── Carrusel ── */
+.welcome-carousel {
+  margin-bottom: 2.5rem;
+}
+
+/* ── Grid de módulos ── */
+.welcome-modulos {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  max-width: 860px;
 }
-.welcome-card {
+
+/* ── Card módulo ── */
+.modulo-card {
   background: #fff;
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
   box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-.welcome-card h3 {
-  font-size: 0.95rem;
+.modulo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.1);
+}
+
+/* Área imagen */
+.modulo-img {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Texto */
+.modulo-info {
+  padding: 1.2rem 1.4rem 1.5rem;
+}
+.modulo-info h3 {
+  font-size: 1rem;
   font-weight: 700;
   margin-bottom: 0.4rem;
 }
-.welcome-card p {
-  font-size: 0.82rem;
+.modulo-info p {
+  font-size: 0.83rem;
   color: #ACABA5;
+  line-height: 1.6;
 }

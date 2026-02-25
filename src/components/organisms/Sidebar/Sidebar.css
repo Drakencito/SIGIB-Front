@@ -4,12 +4,19 @@
     display: flex;
     flex-direction: column;
     padding: 1.2rem 0.6rem;
-    transition: width 0.28s ease, background 0.28s ease;
     overflow: hidden;
     flex-shrink: 0;
-    height: 100%;
-    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.12);
+    position: fixed;
+    left: 0.75rem;
+    height: calc(100vh - 170px);   
+    transition: top 0.35s ease, width 0.28s ease, background 0.28s ease;
+    border-radius: 16px;
+    box-shadow:
+      4px 0 24px rgba(0, 0, 0, 0.18),
+      2px 0 8px rgba(0, 0, 0, 0.1);
+    z-index: 50;
 }
+  
   
 .sidebar.open {
     width: 256px;
@@ -79,7 +86,6 @@
     width: 100%;
     min-width: 0;
 }
-
 .sidebar-search::placeholder { 
     color: rgba(255,255,255,0.4); 
 }
@@ -90,20 +96,19 @@
     margin: 0.5rem 0;
     flex-shrink: 0;
 }
- 
+  
 .sidebar-nav {
     display: flex;
     flex-direction: column;
     gap: 0.15rem;
     flex: 1;
-    overflow-y: auto;        
-    scrollbar-width: none;         
-    -ms-overflow-style: none;        
+    overflow-y: auto;
     overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
-
-.sidebar-nav::-webkit-scrollbar {
-    display: none;
+.sidebar-nav::-webkit-scrollbar { 
+    display: none; 
 }
   
 .sidebar-item {
@@ -124,7 +129,7 @@
     background: rgba(255,255,255,0.12);
     color: #fff;
 }
-  .sidebar-item.active {
+.sidebar-item.active {
     background: rgba(255,255,255,0.18);
     color: #fff;
     font-weight: 700;
@@ -140,10 +145,10 @@
     animation: fadeIn 0.18s ease;
 }
   
-.sidebar-bottom {
-    flex-shrink: 0;
+.sidebar-bottom { 
+    flex-shrink: 0; 
 }
-
+  
 .sidebar-logout {
     display: flex;
     align-items: center;
@@ -170,22 +175,4 @@
     from { opacity: 0; transform: translateX(-6px); }
     to   { opacity: 1; transform: translateX(0); }
 }
-.sidebar {
-    width: 64px;
-    background: #161a1d;
-    display: flex;
-    flex-direction: column;
-    padding: 1.2rem 0.6rem;
-    transition: width 0.28s ease, background 0.28s ease, border-radius 0.28s ease;
-    overflow: hidden;
-    flex-shrink: 0;
- 
-    height: calc(100% - 1.5rem);  
-    margin: 0.75rem 0 0.75rem 0.75rem;
-    border-radius: 16px;
-    box-shadow:
-      4px 0 24px rgba(0, 0, 0, 0.18),
-      2px 0 8px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-}
-    
+  

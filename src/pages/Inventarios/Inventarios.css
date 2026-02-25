@@ -1,0 +1,208 @@
+.inv-page {
+    padding: 2.5rem 3rem;
+    background: #F3F3E7;
+    min-height: 100%;
+  }
+  
+  /* ── Encabezado ── */
+  .inv-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  .inv-header h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1a2e2b;
+    margin-bottom: 0.3rem;
+  }
+  .inv-header p { font-size: 0.88rem; color: #ACABA5; }
+  
+  .inv-btn-add {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #006657;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 0.7rem 1.4rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+  .inv-btn-add:hover { opacity: 0.88; }
+  
+  /* ── Stats ── */
+  .inv-stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.8rem;
+  }
+  .inv-stat-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .inv-stat-icono { flex-shrink: 0; }
+  .inv-stat-valor {
+    display: block;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #1a2e2b;
+    line-height: 1;
+  }
+  .inv-stat-label {
+    font-size: 0.75rem;
+    color: #ACABA5;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  
+  /* ── Filtros ── */
+  .inv-filtros {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+  }
+  
+  .inv-search {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+  }
+  .inv-search-icon {
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ACABA5;
+  }
+  .inv-search input {
+    width: 100%;
+    padding: 0.65rem 0.85rem 0.65rem 2.4rem;
+    background: #fff;
+    border: 1.5px solid #e0e8e4;
+    border-radius: 10px;
+    font-size: 0.87rem;
+    color: #1a2e2b;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .inv-search input:focus { border-color: #006657; }
+  
+  .inv-filtros select {
+    padding: 0.65rem 1rem;
+    background: #fff;
+    border: 1.5px solid #e0e8e4;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: #1a2e2b;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .inv-filtros select:focus { border-color: #006657; }
+  
+  /* ── Tabla ── */
+  .inv-tabla-wrap {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  
+  .inv-tabla {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .inv-tabla thead tr {
+    background: #f8f9f7;
+    border-bottom: 2px solid #e8ede8;
+  }
+  .inv-tabla th {
+    text-align: left;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #778D76;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    white-space: nowrap;
+  }
+  
+  .inv-tabla tbody tr {
+    border-bottom: 1px solid #f0f4f0;
+    transition: background 0.15s;
+  }
+  .inv-tabla tbody tr:last-child { border-bottom: none; }
+  .inv-tabla tbody tr:hover { background: #f8faf8; }
+  
+  .inv-tabla td {
+    padding: 0.85rem 1.1rem;
+    font-size: 0.87rem;
+    color: #1a2e2b;
+    vertical-align: middle;
+  }
+  
+  .inv-marca {
+    display: block;
+    font-weight: 700;
+    color: #1a2e2b;
+  }
+  .inv-modelo {
+    display: block;
+    font-size: 0.8rem;
+    color: #ACABA5;
+  }
+  
+  .inv-serie { font-family: monospace; font-size: 0.82rem; color: #778D76; }
+  
+  .inv-badge-cat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: #f0f4f0;
+    color: #556B55;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.3rem 0.7rem;
+    border-radius: 50px;
+    white-space: nowrap;
+  }
+  
+  .inv-clues-nombre { display: block; font-size: 0.82rem; font-weight: 600; }
+  .inv-clues-code   { display: block; font-size: 0.75rem; color: #ACABA5; font-family: monospace; }
+  
+  .inv-badge-estado {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  
+  .inv-empty {
+    text-align: center;
+    padding: 3rem;
+    color: #ACABA5;
+    font-size: 0.9rem;
+  }
+  
+  .inv-count {
+    text-align: right;
+    margin-top: 0.8rem;
+    font-size: 0.78rem;
+    color: #ACABA5;
+  }
+  

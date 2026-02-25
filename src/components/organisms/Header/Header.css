@@ -1,6 +1,6 @@
 .header {
     height: 60px;
-    background: #006657;
+    background: #611232;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -21,7 +21,7 @@
     font-size: 1.4rem;
     font-weight: 900;
     letter-spacing: 0.15em;
-    color: #006657;
+    color: #96af9a;
 }
 
 .header-sub {
