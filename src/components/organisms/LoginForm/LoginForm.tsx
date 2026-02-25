@@ -8,11 +8,11 @@ import Button from '../../atoms/Button/Button'
 import './LoginForm.css'
 
 function LoginForm() {
-  const [clues, setClues]       = useState<string>('')
+  const [clues, setClues] = useState<string>('')
   const [password, setPassword] = useState<string>('')
-  const [error, setError]       = useState<string>('')
-  const { login }               = useAuth()
-  const navigate                = useNavigate()
+  const [error, setError] = useState<string>('')
+  const { login } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()

@@ -9,12 +9,12 @@ import Tickets from '../pages/Tickets/Tickets'
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/"           element={<LoginPage />} />
+      <Route path="/" element={<LoginPage />} />
       <Route element={<DashboardLayout />}>
-        <Route path="/inicio"       element={<Welcome />} />
-        <Route path="/inventarios"  element={<Inventarios />} />
-        <Route path="/solicitudes"  element={<Solicitudes />} />
-        <Route path="/tickets"      element={<Tickets />} />
+        <Route path="/inicio" element={<Welcome />} />
+        <Route path="/inventarios" element={<Inventarios />} />
+        <Route path="/solicitudes" element={<Solicitudes />} />
+        <Route path="/tickets" element={<Tickets />} />
       </Route>
     </Routes>
   )

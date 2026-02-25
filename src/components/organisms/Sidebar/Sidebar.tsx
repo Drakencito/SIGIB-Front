@@ -9,17 +9,17 @@ interface Props {
 }
 
 const items = [
-  { to: '/inicio',      icon: Home,     label: 'Inicio' },
-  { to: '/inventarios', icon: Package,  label: 'Gestión de Inventarios' },
+  { to: '/inicio', icon: Home, label: 'Inicio' },
+  { to: '/inventarios', icon: Package, label: 'Gestión de Inventarios' },
   { to: '/solicitudes', icon: FileText, label: 'Solicitudes de Recursos' },
-  { to: '/tickets',     icon: Ticket,   label: 'Tickets de Soporte' },
+  { to: '/tickets', icon: Ticket, label: 'Tickets de Soporte' },
 ]
 
 const Sidebar = forwardRef<HTMLElement, Props>(({ topPx }, ref) => {
-  const [open, setOpen]         = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false)
   const [busqueda, setBusqueda] = useState<string>('')
-  const { usuario, logout }     = useAuth()
-  const navigate                = useNavigate()
+  const { usuario, logout } = useAuth()
+  const navigate = useNavigate()
 
   const handleLogout = () => {
     logout()

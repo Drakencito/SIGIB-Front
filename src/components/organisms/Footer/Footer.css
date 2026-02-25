@@ -6,22 +6,21 @@
     justify-content: space-between;
     padding: 0 2.5rem;
 }
-  
+
 .footer-img-left img {
     height: 50px;
     object-fit: contain;
     filter: brightness(0) invert(1);
 }
-  
+
 .footer-img-right img {
     height: 50px;
     object-fit: contain;
 }
-  
+
 .footer-copy {
     font-size: 0.75rem;
     color: #aab3aa;
     letter-spacing: 0.05em;
     text-align: center;
 }
-  

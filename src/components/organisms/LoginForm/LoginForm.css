@@ -1,4 +1,10 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 .login-page {
     min-height: 100vh;
@@ -18,38 +24,38 @@
 }
 
 .deco-1 {
-    width: 420px; 
+    width: 420px;
     height: 420px;
     background: rgba(162, 186, 173, 0.35);
-    top: -140px; 
+    top: -140px;
     left: -100px;
     transform: rotate(-20deg);
 }
 
 .deco-2 {
-    width: 300px; 
+    width: 300px;
     height: 300px;
     background: rgba(119, 141, 118, 0.2);
-    bottom: -80px; 
+    bottom: -80px;
     right: 80px;
     transform: rotate(30deg);
     border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
 }
 
 .deco-3 {
-    width: 200px; 
+    width: 200px;
     height: 200px;
     background: rgba(0, 102, 87, 0.1);
-    top: 30px; 
+    top: 30px;
     right: -50px;
     border-radius: 50%;
 }
 
 .deco-4 {
-    width: 100px; 
+    width: 100px;
     height: 100px;
     background: rgba(165, 127, 44, 0.1);
-    bottom: 160px; 
+    bottom: 160px;
     left: 60px;
     border-radius: 16px;
     transform: rotate(25deg);
@@ -58,11 +64,13 @@
 
 .login-img-bottom-right {
     position: absolute;
-    bottom: 0; right: 0;
+    bottom: 0;
+    right: 0;
     width: 200px;
     pointer-events: none;
     z-index: 0;
 }
+
 .login-img-bottom-right img {
     width: 100%;
     object-fit: contain;
@@ -89,11 +97,13 @@
     align-items: center;
     gap: 1rem;
 }
+
 .card-top img {
     height: 80px;
     object-fit: contain;
     filter: brightness(0) invert(1);
 }
+
 .card-top h1 {
     font-size: 1.05rem;
     font-weight: 400;
@@ -119,6 +129,7 @@
     text-align: center;
     margin-bottom: 1.8rem;
 }
+
 .card-form-header h2 {
     font-size: 1.2rem;
     font-weight: 400;
@@ -127,9 +138,11 @@
     color: #1a2e2b;
     margin-bottom: 0.5rem;
 }
+
 .card-form-header h2 strong {
     font-weight: 800;
 }
+
 .title-underline {
     height: 3px;
     width: 165px;
@@ -141,6 +154,7 @@
 .field {
     margin-bottom: 1.5rem;
 }
+
 .field label {
     display: block;
     font-size: 0.72rem;
@@ -150,6 +164,7 @@
     text-transform: uppercase;
     margin-bottom: 0.45rem;
 }
+
 .field input {
     width: 100%;
     padding: 0.5rem 0;
@@ -163,37 +178,39 @@
     transition: border-color 0.25s;
 }
 
-.field input::placeholder { 
-    color: #c8d4cc; 
+.field input::placeholder {
+    color: #c8d4cc;
 }
 
-.field input:focus { 
-    border-bottom-color: #006657; 
+.field input:focus {
+    border-bottom-color: #006657;
 }
 
-.password-wrap { 
-    position: relative; 
+.password-wrap {
+    position: relative;
 }
 
-.password-wrap input { 
-    padding-right: 2rem; 
+.password-wrap input {
+    padding-right: 2rem;
 }
+
 .toggle-pwd {
-    position: absolute; 
-    right: 0; 
+    position: absolute;
+    right: 0;
     top: 50%;
     transform: translateY(-50%);
-    background: none; 
+    background: none;
     border: none;
-    cursor: pointer; 
+    cursor: pointer;
     color: #ACABA5;
-    display: flex; 
+    display: flex;
     align-items: center;
-    transition: color 0.2s; 
+    transition: color 0.2s;
     padding: 0;
 }
-.toggle-pwd:hover { 
-    color: #778D76; 
+
+.toggle-pwd:hover {
+    color: #778D76;
 }
 
 .forgot-wrap {
@@ -201,6 +218,7 @@
     margin-top: -0.6rem;
     margin-bottom: 1.8rem;
 }
+
 .link-forgot {
     font-size: 0.8rem;
     color: #9b2247;
@@ -208,8 +226,9 @@
     text-decoration: none;
     transition: color 0.2s;
 }
-.link-forgot:hover { 
-    color: #611232; 
+
+.link-forgot:hover {
+    color: #611232;
 }
 
 .btn-ingresar {
@@ -227,13 +246,15 @@
     box-shadow: 0 6px 20px rgba(155, 34, 71, 0.35);
     transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
 }
+
 .btn-ingresar:hover {
     opacity: 0.9;
     transform: translateY(-2px);
     box-shadow: 0 10px 28px rgba(155, 34, 71, 0.45);
 }
+
 .btn-ingresar:active {
-    transform: translateY(0); 
+    transform: translateY(0);
 }
 
 .card-footer-text {

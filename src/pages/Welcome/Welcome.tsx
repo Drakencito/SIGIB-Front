@@ -30,7 +30,7 @@ const modulos = [
 
 function Welcome() {
   const { usuario } = useAuth()
-  const navigate    = useNavigate()
+  const navigate = useNavigate()
 
   const fecha = new Date().toLocaleDateString('es-MX', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
@@ -39,7 +39,6 @@ function Welcome() {
   return (
     <div className="welcome-page">
 
-      {/* Saludo */}
       <div className="welcome-header">
         <div>
           <span className="welcome-fecha">{fecha}</span>
@@ -48,12 +47,10 @@ function Welcome() {
         </div>
       </div>
 
-      {/* Carrusel */}
       <div className="welcome-carousel">
         <Carousel />
       </div>
 
-      {/* Tarjetas de módulos */}
       <div className="welcome-modulos">
         {modulos.map(({ to, icon: Icon, titulo, desc, acento }) => (
           <div

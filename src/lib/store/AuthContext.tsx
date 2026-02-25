@@ -12,7 +12,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   usuario: null,
   login: () => false,
-  logout: () => {},
+  logout: () => { },
 })
 
 export function AuthProvider({ children }: { children: ReactNode }) {

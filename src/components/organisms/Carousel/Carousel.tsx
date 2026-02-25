@@ -27,7 +27,7 @@ const slides: Slide[] = [
 ]
 
 function Carousel() {
-  const [actual, setActual]   = useState<number>(0)
+  const [actual, setActual] = useState<number>(0)
   const [pausado, setPausado] = useState<boolean>(false)
 
   const siguiente = useCallback(() => {
@@ -68,7 +68,7 @@ function Carousel() {
         ))}
       </div>
 
-      <button className="carousel-arrow left"  onClick={anterior}>
+      <button className="carousel-arrow left" onClick={anterior}>
         <ChevronLeft size={22} />
       </button>
       <button className="carousel-arrow right" onClick={siguiente}>

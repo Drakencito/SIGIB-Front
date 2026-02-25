@@ -6,52 +6,76 @@ import { UNIDADES } from '../../lib/constants/unidades'
 import type { CategoriaInventario, EstadoInventario } from '../../lib/types/types'
 import './Inventarios.css'
 
-// ── Helpers de etiquetas ──────────────────────────────────────
 const categoriaLabel: Record<CategoriaInventario, string> = {
-  equipo_computo:   'Equipo Cómputo',
-  equipo_red:       'Equipo de Red',
+  equipo_computo: 'Equipo Cómputo',
+  equipo_red: 'Equipo de Red',
   consumible_tinta: 'Tinta',
   consumible_toner: 'Tóner',
-  refaccion:        'Refacción',
+  refaccion: 'Refacción',
 }
 
 const categoriaIcono: Record<CategoriaInventario, ReactElement> = {
-  equipo_computo:   <Monitor  size={14} />,
-  equipo_red:       <Wifi     size={14} />,
-  consumible_tinta: <Droplets size={14} />,
-  consumible_toner: <Printer  size={14} />,
-  refaccion:        <Wrench   size={14} />,
+  equipo_computo: <Monitor size={18} />,
+  equipo_red: <Wifi size={18} />,
+  consumible_tinta: <Droplets size={18} />,
+  consumible_toner: <Printer size={18} />,
+  refaccion: <Wrench size={18} />,
 }
 
 const estadoColor: Record<EstadoInventario, string> = {
   excelente: '#006657',
-  bueno:     '#2e7d32',
-  malo:      '#a57f2c',
-  muy_malo:  '#9b2247',
+  bueno: '#2e7d32',
+  malo: '#a57f2c',
+  muy_malo: '#9b2247',
 }
 
 const estadoLabel: Record<EstadoInventario, string> = {
   excelente: 'Excelente',
-  bueno:     'Bueno',
-  malo:      'Malo',
-  muy_malo:  'Muy Malo',
+  bueno: 'Bueno',
+  malo: 'Malo',
+  muy_malo: 'Muy Malo',
 }
 
 function Inventarios() {
-  const [busqueda,   setBusqueda]   = useState('')
-  const [filtCat,    setFiltCat]    = useState<CategoriaInventario | ''>('')
+  const [busqueda, setBusqueda] = useState('')
+  const [filtCat, setFiltCat] = useState<CategoriaInventario | ''>('')
   const [filtEstado, setFiltEstado] = useState<EstadoInventario | ''>('')
-  const [filtClues,  setFiltClues]  = useState('')
+  const [filtClues, setFiltClues] = useState('')
 
   const totalPorCategoria = (cat: CategoriaInventario) =>
     INVENTARIO.filter(i => i.categoria === cat).length
 
-  const stats: { label: string; valor: number; color: string; icono: ReactElement }[] = [
-    { label: 'Total',        valor: INVENTARIO.length,                                                           color: '#006657', icono: <Monitor size={20} /> },
-    { label: 'Cómputo',      valor: totalPorCategoria('equipo_computo'),                                         color: '#1a3a8a', icono: <Monitor size={20} /> },
-    { label: 'Red',          valor: totalPorCategoria('equipo_red'),                                             color: '#5b3a8a', icono: <Wifi    size={20} /> },
-    { label: 'Consumibles',  valor: totalPorCategoria('consumible_tinta') + totalPorCategoria('consumible_toner'), color: '#a57f2c', icono: <Printer size={20} /> },
-    { label: 'Refacciones',  valor: totalPorCategoria('refaccion'),                                              color: '#9b2247', icono: <Wrench  size={20} /> },
+  const stats = [
+    {
+      id: 'total',
+      icono: <Monitor />,
+      titulo: 'Total',
+      subtitulo: `${INVENTARIO.length} Unidades`,
+    },
+    {
+      id: 'computo',
+      icono: <Monitor />,
+      titulo: 'Cómputo',
+      subtitulo: `${totalPorCategoria('equipo_computo')} Equipos`,
+    },
+    {
+      id: 'red',
+      icono: <Wifi />,
+      titulo: 'Red',
+      subtitulo: `${totalPorCategoria('equipo_red')} Dispositivos`,
+    },
+    {
+      id: 'consumibles',
+      icono: <Printer />,
+      titulo: 'Consumibles',
+      subtitulo: `${totalPorCategoria('consumible_tinta') + totalPorCategoria('consumible_toner')} Piezas`,
+    },
+    {
+      id: 'refacciones',
+      icono: <Wrench />,
+      titulo: 'Refacciones',
+      subtitulo: `${totalPorCategoria('refaccion')} Piezas`,
+    },
   ]
 
   const datos = useMemo(() => {
@@ -59,21 +83,19 @@ function Inventarios() {
       const texto = busqueda.toLowerCase()
       const coincideTexto =
         !busqueda ||
-        item.marca.toLowerCase().includes(texto)        ||
-        item.modelo.toLowerCase().includes(texto)       ||
-        item.noSerie.toLowerCase().includes(texto)      ||
+        item.marca.toLowerCase().includes(texto) ||
+        item.modelo.toLowerCase().includes(texto) ||
+        item.noSerie.toLowerCase().includes(texto) ||
         item.descripcion.toLowerCase().includes(texto)
-      const coincideCat    = !filtCat    || item.categoria === filtCat
-      const coincideEstado = !filtEstado || item.estado    === filtEstado
-      const coincideClues  = !filtClues  || item.clues     === filtClues
+      const coincideCat = !filtCat || item.categoria === filtCat
+      const coincideEstado = !filtEstado || item.estado === filtEstado
+      const coincideClues = !filtClues || item.clues === filtClues
       return coincideTexto && coincideCat && coincideEstado && coincideClues
     })
   }, [busqueda, filtCat, filtEstado, filtClues])
 
   return (
     <div className="inv-page">
-
-      {/* ── Encabezado ── */}
       <div className="inv-header">
         <div>
           <h1>Gestión de Inventarios</h1>
@@ -84,20 +106,24 @@ function Inventarios() {
         </button>
       </div>
 
-      {/* ── Stats ── */}
       <div className="inv-stats">
-        {stats.map(s => (
-          <div className="inv-stat-card" key={s.label} style={{ borderTop: `3px solid ${s.color}` }}>
-            <div className="inv-stat-icono" style={{ color: s.color }}>{s.icono}</div>
-            <div>
-              <span className="inv-stat-valor">{s.valor}</span>
-              <span className="inv-stat-label">{s.label}</span>
+        {stats.map(card => (
+          <div key={card.id} className="inv-summary-card">
+            <div className="inv-summary-top-green" />
+            <div className="inv-summary-top-gold" />
+            <div className="inv-summary-content">
+              <div className="inv-summary-icon-circle">
+                <span className="inv-summary-icon">{card.icono}</span>
+              </div>
+              <div className="inv-summary-texts">
+                <div className="inv-summary-title">{card.titulo}</div>
+                <div className="inv-summary-sub">{card.subtitulo}</div>
+              </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* ── Filtros ── */}
       <div className="inv-filtros">
         <div className="inv-search">
           <Search size={16} className="inv-search-icon" />
@@ -111,26 +137,31 @@ function Inventarios() {
         <select value={filtCat} onChange={e => setFiltCat(e.target.value as CategoriaInventario | '')}>
           <option value="">Todas las categorías</option>
           {Object.entries(categoriaLabel).map(([k, v]) => (
-            <option key={k} value={k}>{v}</option>
+            <option key={k} value={k}>
+              {v}
+            </option>
           ))}
         </select>
 
         <select value={filtEstado} onChange={e => setFiltEstado(e.target.value as EstadoInventario | '')}>
           <option value="">Todos los estados</option>
           {Object.entries(estadoLabel).map(([k, v]) => (
-            <option key={k} value={k}>{v}</option>
+            <option key={k} value={k}>
+              {v}
+            </option>
           ))}
         </select>
 
         <select value={filtClues} onChange={e => setFiltClues(e.target.value)}>
           <option value="">Todas las unidades</option>
           {UNIDADES.filter(u => u.estatus === 'activa').map(u => (
-            <option key={u.clues} value={u.clues}>{u.nombre}</option>
+            <option key={u.clues} value={u.clues}>
+              {u.nombre}
+            </option>
           ))}
         </select>
       </div>
 
-      {/* ── Tabla ── */}
       <div className="inv-tabla-wrap">
         <table className="inv-tabla">
           <thead>
@@ -154,7 +185,7 @@ function Inventarios() {
               datos.map(item => {
                 const unidad = UNIDADES.find(u => u.clues === item.clues)
                 return (
-                  <tr key={item.id}>
+                  <tr key={item.id} className="inv-row-card">
                     <td>
                       <span className="inv-marca">{item.marca}</span>
                       <span className="inv-modelo">{item.modelo}</span>
@@ -190,8 +221,9 @@ function Inventarios() {
         </table>
       </div>
 
-      <p className="inv-count">{datos.length} de {INVENTARIO.length} registros</p>
-
+      <p className="inv-count">
+        {datos.length} de {INVENTARIO.length} registros
+      </p>
     </div>
   )
 }

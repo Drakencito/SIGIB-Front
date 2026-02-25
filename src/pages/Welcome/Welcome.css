@@ -4,10 +4,10 @@
   min-height: 100%;
 }
 
-/* ── Saludo ── */
 .welcome-header {
   margin-bottom: 1.8rem;
 }
+
 .welcome-fecha {
   font-size: 0.78rem;
   text-transform: uppercase;
@@ -16,45 +16,47 @@
   display: block;
   margin-bottom: 0.4rem;
 }
+
 .welcome-header h1 {
   font-size: 2rem;
   font-weight: 300;
   color: #1a2e2b;
   margin-bottom: 0.3rem;
 }
-.welcome-header h1 strong { font-weight: 800; }
+
+.welcome-header h1 strong {
+  font-weight: 800;
+}
+
 .welcome-header p {
   font-size: 0.9rem;
   color: #ACABA5;
 }
 
-/* ── Carrusel ── */
 .welcome-carousel {
   margin-bottom: 2.5rem;
 }
 
-/* ── Grid de módulos ── */
 .welcome-modulos {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
 
-/* ── Card módulo ── */
 .modulo-card {
   background: #fff;
   border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s, box-shadow 0.2s;
 }
+
 .modulo-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 32px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.1);
 }
 
-/* Área imagen */
 .modulo-img {
   height: 140px;
   display: flex;
@@ -62,15 +64,16 @@
   justify-content: center;
 }
 
-/* Texto */
 .modulo-info {
   padding: 1.2rem 1.4rem 1.5rem;
 }
+
 .modulo-info h3 {
   font-size: 1rem;
   font-weight: 700;
   margin-bottom: 0.4rem;
 }
+
 .modulo-info p {
   font-size: 0.83rem;
   color: #ACABA5;
