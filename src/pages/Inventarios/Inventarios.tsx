@@ -1,6 +1,17 @@
 import { useState, useMemo } from 'react'
 import type { ReactElement } from 'react'
-import { Search, Plus, Monitor, Wifi, Droplets, Printer, Wrench } from 'lucide-react'
+import {
+  Search,
+  Plus,
+  Monitor,
+  Wifi,
+  Droplets,
+  Printer,
+  Wrench,
+  Eye,
+  Trash2,
+  AlertTriangle,
+} from 'lucide-react'
 import { INVENTARIO } from '../../lib/constants/inventario'
 import { UNIDADES } from '../../lib/constants/unidades'
 import type { CategoriaInventario, EstadoInventario } from '../../lib/types/types'
@@ -36,11 +47,13 @@ const estadoLabel: Record<EstadoInventario, string> = {
   muy_malo: 'Muy Malo',
 }
 
+
 function Inventarios() {
   const [busqueda, setBusqueda] = useState('')
   const [filtCat, setFiltCat] = useState<CategoriaInventario | ''>('')
   const [filtEstado, setFiltEstado] = useState<EstadoInventario | ''>('')
   const [filtClues, setFiltClues] = useState('')
+  const [itemAEliminar, setItemAEliminar] = useState<number | null>(null)
 
   const totalPorCategoria = (cat: CategoriaInventario) =>
     INVENTARIO.filter(i => i.categoria === cat).length
@@ -68,7 +81,8 @@ function Inventarios() {
       id: 'consumibles',
       icono: <Printer />,
       titulo: 'Consumibles',
-      subtitulo: `${totalPorCategoria('consumible_tinta') + totalPorCategoria('consumible_toner')} Piezas`,
+      subtitulo: `${totalPorCategoria('consumible_tinta') + totalPorCategoria('consumible_toner')
+        } Piezas`,
     },
     {
       id: 'refacciones',
@@ -87,9 +101,11 @@ function Inventarios() {
         item.modelo.toLowerCase().includes(texto) ||
         item.noSerie.toLowerCase().includes(texto) ||
         item.descripcion.toLowerCase().includes(texto)
+
       const coincideCat = !filtCat || item.categoria === filtCat
       const coincideEstado = !filtEstado || item.estado === filtEstado
       const coincideClues = !filtClues || item.clues === filtClues
+
       return coincideTexto && coincideCat && coincideEstado && coincideClues
     })
   }, [busqueda, filtCat, filtEstado, filtClues])
@@ -134,7 +150,10 @@ function Inventarios() {
           />
         </div>
 
-        <select value={filtCat} onChange={e => setFiltCat(e.target.value as CategoriaInventario | '')}>
+        <select
+          value={filtCat}
+          onChange={e => setFiltCat(e.target.value as CategoriaInventario | '')}
+        >
           <option value="">Todas las categorías</option>
           {Object.entries(categoriaLabel).map(([k, v]) => (
             <option key={k} value={k}>
@@ -143,7 +162,10 @@ function Inventarios() {
           ))}
         </select>
 
-        <select value={filtEstado} onChange={e => setFiltEstado(e.target.value as EstadoInventario | '')}>
+        <select
+          value={filtEstado}
+          onChange={e => setFiltEstado(e.target.value as EstadoInventario | '')}
+        >
           <option value="">Todos los estados</option>
           {Object.entries(estadoLabel).map(([k, v]) => (
             <option key={k} value={k}>
@@ -163,63 +185,126 @@ function Inventarios() {
       </div>
 
       <div className="inv-tabla-wrap">
-        <table className="inv-tabla">
-          <thead>
-            <tr>
-              <th>Marca / Modelo</th>
-              <th>No. Serie</th>
-              <th>Categoría</th>
-              <th>Departamento</th>
-              <th>Unidad médica</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {datos.length === 0 ? (
+        <div className="inv-tabla-scroll">
+          <table className="inv-tabla">
+            <thead>
               <tr>
-                <td colSpan={6} className="inv-empty">
-                  Sin resultados para los filtros aplicados
-                </td>
+                <th>Marca / Modelo</th>
+                <th>No. Serie</th>
+                <th>Categoría</th>
+                <th>Departamento</th>
+                <th>Unidad médica</th>
+                <th>Estado</th>
+                <th>Acciones</th>
               </tr>
-            ) : (
-              datos.map(item => {
-                const unidad = UNIDADES.find(u => u.clues === item.clues)
-                return (
-                  <tr key={item.id} className="inv-row-card">
-                    <td>
-                      <span className="inv-marca">{item.marca}</span>
-                      <span className="inv-modelo">{item.modelo}</span>
-                    </td>
-                    <td className="inv-serie">{item.noSerie}</td>
-                    <td>
-                      <span className="inv-badge-cat">
-                        {categoriaIcono[item.categoria]}
-                        {categoriaLabel[item.categoria]}
-                      </span>
-                    </td>
-                    <td>{item.departamento}</td>
-                    <td>
-                      <span className="inv-clues-nombre">{unidad?.nombre ?? item.clues}</span>
-                      <span className="inv-clues-code">{item.clues}</span>
-                    </td>
-                    <td>
-                      <span
-                        className="inv-badge-estado"
-                        style={{
-                          background: `${estadoColor[item.estado]}18`,
-                          color: estadoColor[item.estado],
-                        }}
-                      >
-                        {estadoLabel[item.estado]}
-                      </span>
-                    </td>
-                  </tr>
-                )
-              })
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {datos.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="inv-empty">
+                    Sin resultados para los filtros aplicados
+                  </td>
+                </tr>
+              ) : (
+                datos.map(item => {
+                  const unidad = UNIDADES.find(u => u.clues === item.clues)
+                  return (
+                    <tr key={item.id} className="inv-row-card">
+                      <td>
+                        <span className="inv-marca">{item.marca}</span>
+                        <span className="inv-modelo">{item.modelo}</span>
+                      </td>
+                      <td className="inv-serie">{item.noSerie}</td>
+                      <td>
+                        <span className="inv-badge-cat">
+                          {categoriaIcono[item.categoria]}
+                          {categoriaLabel[item.categoria]}
+                        </span>
+                      </td>
+                      <td>{item.departamento}</td>
+                      <td>
+                        <span className="inv-clues-nombre">
+                          {unidad?.nombre ?? item.clues}
+                        </span>
+                        <span className="inv-clues-code">{item.clues}</span>
+                      </td>
+                      <td>
+                        <span
+                          className="inv-badge-estado"
+                          style={{
+                            background: `${estadoColor[item.estado]}18`,
+                            color: estadoColor[item.estado],
+                          }}
+                        >
+                          {estadoLabel[item.estado]}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="inv-acciones">
+                          <button
+                            type="button"
+                            className="inv-accion-btn inv-accion-ver"
+                            aria-label="Ver detalle"
+                          >
+                            <Eye size={18} />
+                          </button>
+                          <button
+                            type="button"
+                            className="inv-accion-btn inv-accion-eliminar"
+                            aria-label="Eliminar"
+                            onClick={() => setItemAEliminar(item.id)}
+                          >
+                            <Trash2 size={18} />
+                          </button>
+
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
+      {itemAEliminar !== null && (
+        <div className="inv-modal-backdrop">
+          <div className="inv-modal-card">
+            <div className="inv-modal-top-green" />
+            <div className="inv-modal-top-gold" />
+            <div className="inv-modal-content">
+              <div className="inv-modal-icon-circle">
+                <AlertTriangle size={26} className="inv-modal-icon" />
+              </div>
+              <div className="inv-modal-texts">
+                <h2>Eliminar equipo</h2>
+                <p>
+                  ¿Estás seguro que deseas eliminar este equipo del inventario?
+                  Esta acción no se puede deshacer.
+                </p>
+                <div className="inv-modal-actions">
+                  <button
+                    type="button"
+                    className="inv-modal-btn-cancelar"
+                    onClick={() => setItemAEliminar(null)}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="button"
+                    className="inv-modal-btn-confirmar"
+                    onClick={() => {
+                      setItemAEliminar(null)
+                    }}
+                  >
+                    Sí, eliminar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <p className="inv-count">
         {datos.length} de {INVENTARIO.length} registros
