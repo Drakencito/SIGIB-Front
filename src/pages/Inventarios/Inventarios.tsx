@@ -8,9 +8,12 @@ import {
   Droplets,
   Printer,
   Wrench,
-  Eye,
   Trash2,
   AlertTriangle,
+  CheckCircle2,
+  MonitorSmartphone,
+  Hand,
+  Pencil,
 } from 'lucide-react'
 import { INVENTARIO } from '../../lib/constants/inventario'
 import { UNIDADES } from '../../lib/constants/unidades'
@@ -26,11 +29,11 @@ const categoriaLabel: Record<CategoriaInventario, string> = {
 }
 
 const categoriaIcono: Record<CategoriaInventario, ReactElement> = {
-  equipo_computo: <Monitor size={18} />,
-  equipo_red: <Wifi size={18} />,
-  consumible_tinta: <Droplets size={18} />,
-  consumible_toner: <Printer size={18} />,
-  refaccion: <Wrench size={18} />,
+  equipo_computo: <Monitor size={24} />,
+  equipo_red: <Wifi size={24} />,
+  consumible_tinta: <Droplets size={24} />,
+  consumible_toner: <Printer size={24} />,
+  refaccion: <Wrench size={24} />,
 }
 
 const estadoColor: Record<EstadoInventario, string> = {
@@ -47,13 +50,20 @@ const estadoLabel: Record<EstadoInventario, string> = {
   muy_malo: 'Muy Malo',
 }
 
+type ModoFormulario = 'crear' | 'editar'
 
 function Inventarios() {
   const [busqueda, setBusqueda] = useState('')
   const [filtCat, setFiltCat] = useState<CategoriaInventario | ''>('')
   const [filtEstado, setFiltEstado] = useState<EstadoInventario | ''>('')
   const [filtClues, setFiltClues] = useState('')
+
   const [itemAEliminar, setItemAEliminar] = useState<number | null>(null)
+
+  const [abiertoFormulario, setAbiertoFormulario] = useState(false)
+  const [modoFormulario, setModoFormulario] = useState<ModoFormulario>('crear')
+  const [itemSeleccionado, setItemSeleccionado] = useState<number | null>(null)
+  const [soloLectura, setSoloLectura] = useState(false)
 
   const totalPorCategoria = (cat: CategoriaInventario) =>
     INVENTARIO.filter(i => i.categoria === cat).length
@@ -110,6 +120,34 @@ function Inventarios() {
     })
   }, [busqueda, filtCat, filtEstado, filtClues])
 
+  const itemActual =
+    itemSeleccionado != null ? INVENTARIO.find(i => i.id === itemSeleccionado) : null
+
+  const abrirCrear = () => {
+    setItemSeleccionado(null)
+    setModoFormulario('crear')
+    setSoloLectura(false)
+    setAbiertoFormulario(true)
+  }
+
+  const abrirDetalle = (id: number) => {
+    setItemSeleccionado(id)
+    setModoFormulario('editar')
+    setSoloLectura(true)
+    setAbiertoFormulario(true)
+  }
+
+  const abrirEditar = (id: number) => {
+    setItemSeleccionado(id)
+    setModoFormulario('editar')
+    setSoloLectura(false)
+    setAbiertoFormulario(true)
+  }
+
+  const cerrarFormulario = () => {
+    setAbiertoFormulario(false)
+  }
+
   return (
     <div className="inv-page">
       <div className="inv-header">
@@ -117,7 +155,7 @@ function Inventarios() {
           <h1>Gestión de Inventarios</h1>
           <p>Administra los equipos e insumos de las unidades médicas</p>
         </div>
-        <button className="inv-btn-add">
+        <button className="inv-btn-add" onClick={abrirCrear}>
           <Plus size={18} /> Agregar equipo
         </button>
       </div>
@@ -209,7 +247,11 @@ function Inventarios() {
                 datos.map(item => {
                   const unidad = UNIDADES.find(u => u.clues === item.clues)
                   return (
-                    <tr key={item.id} className="inv-row-card">
+                    <tr
+                      key={item.id}
+                      className="inv-row-card"
+                      onClick={() => abrirDetalle(item.id)}
+                    >
                       <td>
                         <span className="inv-marca">{item.marca}</span>
                         <span className="inv-modelo">{item.modelo}</span>
@@ -240,13 +282,17 @@ function Inventarios() {
                         </span>
                       </td>
                       <td>
-                        <div className="inv-acciones">
+                        <div
+                          className="inv-acciones"
+                          onClick={e => e.stopPropagation()}
+                        >
                           <button
                             type="button"
-                            className="inv-accion-btn inv-accion-ver"
-                            aria-label="Ver detalle"
+                            className="inv-accion-btn inv-accion-editar"
+                            aria-label="Editar"
+                            onClick={() => abrirEditar(item.id)}
                           >
-                            <Eye size={18} />
+                            <Pencil size={18} />
                           </button>
                           <button
                             type="button"
@@ -256,7 +302,6 @@ function Inventarios() {
                           >
                             <Trash2 size={18} />
                           </button>
-
                         </div>
                       </td>
                     </tr>
@@ -267,6 +312,7 @@ function Inventarios() {
           </table>
         </div>
       </div>
+
       {itemAEliminar !== null && (
         <div className="inv-modal-backdrop">
           <div className="inv-modal-card">
@@ -274,7 +320,7 @@ function Inventarios() {
             <div className="inv-modal-top-gold" />
             <div className="inv-modal-content">
               <div className="inv-modal-icon-circle">
-                <AlertTriangle size={26} className="inv-modal-icon" />
+                <AlertTriangle className="inv-modal-icon" />
               </div>
               <div className="inv-modal-texts">
                 <h2>Eliminar equipo</h2>
@@ -294,6 +340,7 @@ function Inventarios() {
                     type="button"
                     className="inv-modal-btn-confirmar"
                     onClick={() => {
+                      // agregar lógica de eliminar ...
                       setItemAEliminar(null)
                     }}
                   >
@@ -303,6 +350,287 @@ function Inventarios() {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {abiertoFormulario && (
+        <div className="inv-modal-backdrop">
+          {soloLectura ? (
+            <div className="inv-add-card inv-add-card-detalle">
+              <div className="inv-detalle-main">
+                <header className="inv-detalle-header">
+                  <div>
+                    <h2>
+                      {itemActual?.marca} {itemActual?.modelo}
+                    </h2>
+                    <p>Consulta la información registrada de este equipo.</p>
+                  </div>
+                  <div className="inv-detalle-clues">
+                    <span className="inv-detalle-clues-code">
+                      {itemActual?.clues}
+                    </span>
+                    <span className="inv-detalle-clues-nombre">
+                      {UNIDADES.find(u => u.clues === itemActual?.clues)
+                        ?.nombre ?? 'Unidad médica'}
+                    </span>
+                  </div>
+                </header>
+
+                <div className="inv-detalle-separador" />
+
+                <div className="inv-detalle-icon-wrap">
+                  <div className="inv-detalle-icon-circle">
+                    {itemActual && categoriaIcono[itemActual.categoria]}
+                  </div>
+                </div>
+
+                <div className="inv-detalle-section">
+                  <div className="inv-detalle-row">
+                    <div className="inv-detalle-card">
+                      <span className="inv-detalle-label">No. de serie</span>
+                      <span className="inv-detalle-value inv-detalle-value-mono">
+                        {itemActual?.noSerie}
+                      </span>
+                    </div>
+                    <div className="inv-detalle-card">
+                      <span className="inv-detalle-label">Categoría</span>
+                      <span className="inv-detalle-value">
+                        {itemActual &&
+                          categoriaLabel[itemActual.categoria]}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="inv-detalle-row">
+                    <div className="inv-detalle-card">
+                      <span className="inv-detalle-label">Estado</span>
+                      <span
+                        className="inv-detalle-estado"
+                        style={{
+                          background: `${estadoColor[itemActual?.estado ?? 'bueno']}18`,
+                          color: estadoColor[itemActual?.estado ?? 'bueno'],
+                        }}
+                      >
+                        {itemActual ? estadoLabel[itemActual.estado] : ''}
+                      </span>
+                    </div>
+                    <div className="inv-detalle-card">
+                      <span className="inv-detalle-label">Departamento</span>
+                      <span className="inv-detalle-value">
+                        {itemActual?.departamento}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="inv-detalle-row">
+                    <div className="inv-detalle-card inv-detalle-card-full">
+                      <span className="inv-detalle-label">Descripción</span>
+                      <span className="inv-detalle-value">
+                        {itemActual?.descripcion}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="inv-detalle-row">
+                    <div className="inv-detalle-card inv-detalle-card-full">
+                      <span className="inv-detalle-label">Unidad médica</span>
+                      <span className="inv-detalle-value">
+                        {UNIDADES.find(u => u.clues === itemActual?.clues)
+                          ?.nombre ?? '—'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="inv-detalle-separador inv-detalle-separador-bottom" />
+
+                <div className="inv-detalle-footer">
+                  <span className="inv-detalle-footnote">
+                    Última actualización: información demostrativa
+                  </span>
+
+                  <div className="inv-detalle-footer-center">
+                    <button
+                      type="button"
+                      className="inv-add-btn-aceptar"
+                      onClick={cerrarFormulario}
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+
+                  <img
+                    className="inv-detalle-footer-img"
+                     src="/imagotipo.png"
+                    alt="IMSS Bienestar"
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="inv-add-card">
+              <div className="inv-add-main">
+                <header className="inv-add-header">
+                  <h2>
+                    {modoFormulario === 'crear'
+                      ? 'Registrar nuevo equipo'
+                      : 'Editar equipo'}
+                  </h2>
+                  <p>
+                    {modoFormulario === 'crear'
+                      ? 'Captura los datos del equipo para agregarlo al inventario.'
+                      : 'Actualiza los datos del equipo seleccionado.'}
+                  </p>
+                </header>
+
+                <form className="inv-add-form">
+                  <div className="inv-add-grid">
+                    <div className="inv-add-field">
+                      <label>Marca</label>
+                      <input
+                        type="text"
+                        defaultValue={
+                          modoFormulario === 'editar' ? itemActual?.marca : ''
+                        }
+                      />
+                    </div>
+                    <div className="inv-add-field">
+                      <label>Modelo</label>
+                      <input
+                        type="text"
+                        defaultValue={
+                          modoFormulario === 'editar' ? itemActual?.modelo : ''
+                        }
+                      />
+                    </div>
+
+                    <div className="inv-add-field inv-add-field-full">
+                      <label>Descripción</label>
+                      <input
+                        type="text"
+                        defaultValue={
+                          modoFormulario === 'editar'
+                            ? itemActual?.descripcion
+                            : ''
+                        }
+                      />
+                    </div>
+
+                    <div className="inv-add-field">
+                      <label>Categoría</label>
+                      <select
+                        defaultValue={
+                          modoFormulario === 'editar' ? itemActual?.categoria : ''
+                        }
+                      >
+                        <option value="">Seleccione categoría…</option>
+                        {Object.entries(categoriaLabel).map(([k, v]) => (
+                          <option key={k} value={k}>
+                            {v}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="inv-add-field">
+                      <label>Departamento</label>
+                      <input
+                        type="text"
+                        defaultValue={
+                          modoFormulario === 'editar'
+                            ? itemActual?.departamento
+                            : ''
+                        }
+                      />
+                    </div>
+
+                    <div className="inv-add-field">
+                      <label>No. de serie</label>
+                      <input
+                        type="text"
+                        defaultValue={
+                          modoFormulario === 'editar' ? itemActual?.noSerie : ''
+                        }
+                      />
+                    </div>
+
+                    <div className="inv-add-field">
+                      <label>Unidad médica (CLUES)</label>
+                      <select
+                        defaultValue={
+                          modoFormulario === 'editar' ? itemActual?.clues : ''
+                        }
+                      >
+                        <option value="">Seleccione unidad…</option>
+                        {UNIDADES.filter(u => u.estatus === 'activa').map(u => (
+                          <option key={u.clues} value={u.clues}>
+                            {u.nombre}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="inv-add-actions">
+                    <button
+                      type="button"
+                      className="inv-add-btn-cancelar"
+                      onClick={cerrarFormulario}
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="button"
+                      className="inv-add-btn-aceptar"
+                    >
+                      {modoFormulario === 'crear' ? 'Guardar' : 'Actualizar'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <aside className="inv-add-side">
+                <div className="inv-add-side-body">
+                  <h3>
+                    Indicaciones para el<br /> <span>Registro</span> de equipos
+                  </h3>
+
+                  <ul className="inv-add-side-list">
+                    <li>
+                      <span className="inv-add-side-icon">
+                        <CheckCircle2 size={18} />
+                      </span>
+                      <p>
+                        Verifica que la marca y modelo coincidan con la etiqueta
+                        física.
+                      </p>
+                    </li>
+                    <li>
+                      <span className="inv-add-side-icon">
+                        <MonitorSmartphone size={18} />
+                      </span>
+                      <p>
+                        Captura el número de serie exactamente como aparece.
+                      </p>
+                    </li>
+                    <li>
+                      <span className="inv-add-side-icon">
+                        <Hand size={18} />
+                      </span>
+                      <p>
+                        Selecciona la unidad médica correcta según su CLUES.
+                      </p>
+                    </li>
+                  </ul>
+
+                  <div className="inv-add-side-bar" />
+                </div>
+
+                <div className="inv-add-side-image">
+                  <img src="/imagotipo.png" alt="" />
+                </div>
+              </aside>
+            </div>
+          )}
         </div>
       )}
 
