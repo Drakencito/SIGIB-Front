@@ -52,6 +52,123 @@ const estadoLabel: Record<EstadoInventario, string> = {
 
 type ModoFormulario = 'crear' | 'editar'
 
+type EstadoClaveVisual = 'muy_malo' | 'malo' | 'regular' | 'bueno' | 'excelente'
+
+const estadosLinea: { key: EstadoClaveVisual; label: string }[] = [
+  { key: 'muy_malo', label: 'Muy malo' },
+  { key: 'malo', label: 'Malo' },
+  { key: 'regular', label: 'Regular' },
+  { key: 'bueno', label: 'Bueno' },
+  { key: 'excelente', label: 'Excelente' },
+]
+
+const estadoColorBarra: Record<EstadoClaveVisual, string> = {
+  muy_malo: '#f44336',
+  malo: '#ff9800',
+  regular: '#ffc107',
+  bueno: '#8bc34a',
+  excelente: '#4caf50',
+}
+
+/** Base: misma barra de pastillas para ambos modos */
+
+type EstadoBarProps =
+  | {
+      mode: 'edit'
+      value: EstadoClaveVisual | null
+      onChange: (estado: EstadoClaveVisual) => void
+    }
+  | {
+      mode: 'view'
+      estadoInventario: EstadoInventario
+    }
+
+function mapEstadoInventarioToVisual(estado: EstadoInventario): EstadoClaveVisual {
+  if (estado === 'muy_malo') return 'muy_malo'
+  if (estado === 'malo') return 'malo'
+  // si luego agregas "regular" a EstadoInventario, solo agregas esta línea:
+  // if (estado === 'regular') return 'regular'
+  if (estado === 'excelente') return 'excelente'
+  return 'bueno'
+}
+
+function EstadoBar(props: EstadoBarProps) {
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null)
+
+  const currentIndex =
+    props.mode === 'edit'
+      ? props.value != null
+        ? estadosLinea.findIndex(e => e.key === props.value)
+        : null
+      : estadosLinea.findIndex(
+          e => e.key === mapEstadoInventarioToVisual(props.estadoInventario),
+        )
+
+  const controllingIndex =
+    props.mode === 'edit' && hoverIndex != null
+      ? hoverIndex
+      : currentIndex != null
+      ? currentIndex
+      : null
+
+  const controllingEstado =
+    controllingIndex != null ? estadosLinea[controllingIndex] : null
+
+  const showLabel =
+    props.mode === 'edit'
+      ? controllingEstado?.label ?? 'Sin estado seleccionado'
+      : estadoLabel[props.estadoInventario]
+
+  return (
+    <div className="estado-selector-wrapper">
+      <div className="estado-selector-line">
+        {estadosLinea.map((estado, index) => {
+          const active =
+            controllingIndex != null && index <= controllingIndex
+
+          const color = controllingEstado
+            ? estadoColorBarra[controllingEstado.key]
+            : undefined
+
+          const className = [
+            'estado-selector-dot',
+            active ? 'estado-selector-dot--activo' : '',
+          ]
+            .filter(Boolean)
+            .join(' ')
+
+          if (props.mode === 'view') {
+            return (
+              <div
+                key={estado.key}
+                className={className}
+                style={active && color ? { backgroundColor: color } : undefined}
+              />
+            )
+          }
+
+          return (
+            <button
+              key={estado.key}
+              type="button"
+              className={className}
+              style={active && color ? { backgroundColor: color } : undefined}
+              onMouseEnter={() => setHoverIndex(index)}
+              onMouseLeave={() => setHoverIndex(null)}
+              onClick={() => props.onChange(estado.key)}
+              aria-label={estado.label}
+            />
+          )
+        })}
+      </div>
+
+      <p className="estado-selector-text">{showLabel}</p>
+    </div>
+  )
+}
+
+/** Componente principal */
+
 function Inventarios() {
   const [busqueda, setBusqueda] = useState('')
   const [filtCat, setFiltCat] = useState<CategoriaInventario | ''>('')
@@ -64,6 +181,8 @@ function Inventarios() {
   const [modoFormulario, setModoFormulario] = useState<ModoFormulario>('crear')
   const [itemSeleccionado, setItemSeleccionado] = useState<number | null>(null)
   const [soloLectura, setSoloLectura] = useState(false)
+
+  const [estadoForm, setEstadoForm] = useState<EstadoClaveVisual | null>(null)
 
   const totalPorCategoria = (cat: CategoriaInventario) =>
     INVENTARIO.filter(i => i.categoria === cat).length
@@ -91,8 +210,9 @@ function Inventarios() {
       id: 'consumibles',
       icono: <Printer />,
       titulo: 'Consumibles',
-      subtitulo: `${totalPorCategoria('consumible_tinta') + totalPorCategoria('consumible_toner')
-        } Piezas`,
+      subtitulo: `${
+        totalPorCategoria('consumible_tinta') + totalPorCategoria('consumible_toner')
+      } Piezas`,
     },
     {
       id: 'refacciones',
@@ -127,6 +247,7 @@ function Inventarios() {
     setItemSeleccionado(null)
     setModoFormulario('crear')
     setSoloLectura(false)
+    setEstadoForm(null)
     setAbiertoFormulario(true)
   }
 
@@ -138,9 +259,17 @@ function Inventarios() {
   }
 
   const abrirEditar = (id: number) => {
+    const item = INVENTARIO.find(i => i.id === id)
     setItemSeleccionado(id)
     setModoFormulario('editar')
     setSoloLectura(false)
+
+    if (item) {
+      setEstadoForm(mapEstadoInventarioToVisual(item.estado))
+    } else {
+      setEstadoForm(null)
+    }
+
     setAbiertoFormulario(true)
   }
 
@@ -232,7 +361,6 @@ function Inventarios() {
                 <th>Categoría</th>
                 <th>Departamento</th>
                 <th>Unidad médica</th>
-                <th>Estado</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -269,17 +397,6 @@ function Inventarios() {
                           {unidad?.nombre ?? item.clues}
                         </span>
                         <span className="inv-clues-code">{item.clues}</span>
-                      </td>
-                      <td>
-                        <span
-                          className="inv-badge-estado"
-                          style={{
-                            background: `${estadoColor[item.estado]}18`,
-                            color: estadoColor[item.estado],
-                          }}
-                        >
-                          {estadoLabel[item.estado]}
-                        </span>
                       </td>
                       <td>
                         <div
@@ -336,15 +453,15 @@ function Inventarios() {
                   >
                     Cancelar
                   </button>
+
                   <button
                     type="button"
                     className="inv-modal-btn-confirmar"
                     onClick={() => {
-                      // agregar lógica de eliminar ...
                       setItemAEliminar(null)
                     }}
                   >
-                    Sí, eliminar
+                    Sí, Eliminar
                   </button>
                 </div>
               </div>
@@ -370,8 +487,8 @@ function Inventarios() {
                       {itemActual?.clues}
                     </span>
                     <span className="inv-detalle-clues-nombre">
-                      {UNIDADES.find(u => u.clues === itemActual?.clues)
-                        ?.nombre ?? 'Unidad médica'}
+                      {UNIDADES.find(u => u.clues === itemActual?.clues)?.nombre ??
+                        'Unidad médica'}
                     </span>
                   </div>
                 </header>
@@ -395,8 +512,7 @@ function Inventarios() {
                     <div className="inv-detalle-card">
                       <span className="inv-detalle-label">Categoría</span>
                       <span className="inv-detalle-value">
-                        {itemActual &&
-                          categoriaLabel[itemActual.categoria]}
+                        {itemActual && categoriaLabel[itemActual.categoria]}
                       </span>
                     </div>
                   </div>
@@ -404,15 +520,9 @@ function Inventarios() {
                   <div className="inv-detalle-row">
                     <div className="inv-detalle-card">
                       <span className="inv-detalle-label">Estado</span>
-                      <span
-                        className="inv-detalle-estado"
-                        style={{
-                          background: `${estadoColor[itemActual?.estado ?? 'bueno']}18`,
-                          color: estadoColor[itemActual?.estado ?? 'bueno'],
-                        }}
-                      >
-                        {itemActual ? estadoLabel[itemActual.estado] : ''}
-                      </span>
+                      {itemActual && (
+                        <EstadoBar mode="view" estadoInventario={itemActual.estado} />
+                      )}
                     </div>
                     <div className="inv-detalle-card">
                       <span className="inv-detalle-label">Departamento</span>
@@ -461,7 +571,7 @@ function Inventarios() {
 
                   <img
                     className="inv-detalle-footer-img"
-                     src="/imagotipo.png"
+                    src="/imagotipo.png"
                     alt="IMSS Bienestar"
                   />
                 </div>
@@ -569,6 +679,15 @@ function Inventarios() {
                         ))}
                       </select>
                     </div>
+
+                    <div className="inv-add-field inv-add-field-full">
+                      <label>Estado</label>
+                      <EstadoBar
+                        mode="edit"
+                        value={estadoForm}
+                        onChange={setEstadoForm}
+                      />
+                    </div>
                   </div>
 
                   <div className="inv-add-actions">
@@ -591,7 +710,8 @@ function Inventarios() {
               <aside className="inv-add-side">
                 <div className="inv-add-side-body">
                   <h3>
-                    Indicaciones para el<br /> <span>Registro</span> de equipos
+                    Indicaciones para el
+                    <br /> <span>Registro</span> de equipos
                   </h3>
 
                   <ul className="inv-add-side-list">
