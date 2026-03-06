@@ -1,0 +1,23 @@
+.icon-btn {
+    background: transparent;
+    border: none;
+    padding: 0.15rem;
+    border-radius: 999px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #7b8f73;
+    transition: background 0.15s, color 0.15s, transform 0.1s;
+}
+
+.icon-btn:hover {
+    background: rgba(0, 102, 87, 0.08);
+    color: #006657;
+    transform: translateY(-1px);
+}
+
+.icon-btn--danger:hover {
+    background: rgba(155, 34, 71, 0.1);
+    color: #9b2247;
+}

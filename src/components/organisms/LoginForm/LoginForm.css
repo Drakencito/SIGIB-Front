@@ -231,30 +231,12 @@
     color: #611232;
 }
 
-.btn-ingresar {
-    width: 100%;
-    padding: 0.95rem;
-    background: linear-gradient(135deg, #9b2247 0%, #a57f2c 100%);
-    color: #fff;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    box-shadow: 0 6px 20px rgba(155, 34, 71, 0.35);
-    transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-}
-
-.btn-ingresar:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(155, 34, 71, 0.45);
-}
-
-.btn-ingresar:active {
-    transform: translateY(0);
+.login-error {
+    color: #9b2247;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 600;
 }
 
 .card-footer-text {

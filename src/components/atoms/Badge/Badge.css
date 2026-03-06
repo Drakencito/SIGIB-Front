@@ -1,0 +1,12 @@
+.badge-root {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+    background: #f0f4f0;
+    color: #556b55;
+}

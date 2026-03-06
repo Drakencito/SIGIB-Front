@@ -1,0 +1,42 @@
+.estado-selector-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.estado-selector-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.estado-selector-dot {
+    width: 40px;
+    height: 12px;
+    border-radius: 999px;
+    border: none;
+    background: #e0e3e7;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.estado-selector-dot--activo {
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+}
+
+.estado-selector-text {
+    font-size: 0.8rem;
+    color: #6f746e;
+    margin: 0;
+}
+
+.estado-visor .estado-selector-dot {
+    cursor: default;
+}
+
+.estado-visor-label {
+    font-size: 0.78rem;
+    color: #555b60;
+}

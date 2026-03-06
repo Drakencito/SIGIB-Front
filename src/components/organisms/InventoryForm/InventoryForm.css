@@ -1,0 +1,239 @@
+.inv-add-card {
+    width: 1100px;
+    max-width: 96vw;
+    background: #ffffff;
+    border-radius: 30px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+    display: grid;
+    grid-template-columns: 1.6fr 1.1fr;
+    overflow: hidden;
+}
+
+/* lado blanco */
+.inv-add-main {
+    padding: 3rem 3rem 2.4rem;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.inv-add-header h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #111111;
+    margin-bottom: 0.3rem;
+}
+
+.inv-add-header p {
+    font-size: 1rem;
+    color: #8c8f93;
+}
+
+.inv-add-form {
+    margin-top: 2rem;
+}
+
+.inv-add-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.6rem;
+    row-gap: 1.2rem;
+}
+
+.inv-add-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.inv-add-field-full {
+    grid-column: 1 / -1;
+}
+
+.inv-add-field label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555b60;
+}
+
+.inv-add-field input,
+.inv-add-field select {
+    padding: 0.7rem 0.9rem;
+    border-radius: 10px;
+    border: none;
+    background: #e2e6ea;
+    font-size: 0.95rem;
+    color: #202326;
+    outline: none;
+}
+
+.inv-add-field select {
+    appearance: none;
+    background-image:
+        linear-gradient(45deg, transparent 50%, #333 50%),
+        linear-gradient(135deg, #333 50%, transparent 50%);
+    background-position: calc(100% - 18px) 50%, calc(100% - 12px) 50%;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    background-color: #e2e6ea;
+}
+
+.inv-add-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2.4rem;
+}
+
+.inv-add-btn-cancelar,
+.inv-add-btn-aceptar {
+    min-width: 170px;
+    border: none;
+    border-radius: 999px;
+    padding: 0.8rem 2rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+
+.inv-add-btn-cancelar {
+    background: #f3f3e7;
+    color: #4f5550;
+}
+
+.inv-add-btn-cancelar:hover {
+    background: #e4e7db;
+    transform: translateY(-1px);
+}
+
+.inv-add-btn-aceptar {
+    background: #006657;
+    color: #ffffff;
+    box-shadow: 0 8px 22px rgba(0, 102, 87, 0.4);
+}
+
+.inv-add-btn-aceptar:hover {
+    filter: brightness(0.96);
+    transform: translateY(-1px);
+}
+
+/* lado verde  */
+.inv-add-side {
+    background: #006657;
+    color: #ffffff;
+    padding: 2.8rem 2.6rem 1.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.inv-add-side-body h3 {
+    font-size: 2.1rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+}
+
+.inv-add-side-body h3 span {
+    color: #c6922b;
+}
+
+.inv-add-side-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+}
+
+.inv-add-side-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    font-size: 1rem;
+}
+
+.inv-add-side-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.inv-add-side-icon svg {
+    color: #ffffff;
+}
+
+.inv-add-side-list p {
+    margin: 0.5rem;
+}
+
+.inv-add-side-bar {
+    height: 8px;
+    width: 60%;
+    border-radius: 999px;
+    background: #c6922b;
+    margin: 3rem auto 0;
+}
+
+.inv-add-side-image {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.inv-add-side-image img {
+    max-width: 60px;
+    height: auto;
+}
+
+.inv-add-field .field {
+  margin-bottom: 0;
+}
+
+.inv-add-field .field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555b60;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.inv-add-field .field input,
+.inv-add-field .field select {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  border: none;
+  background: #e2e6ea;
+  font-size: 0.95rem;
+  color: #202326;
+  outline: none;
+  border-bottom: none;
+}
+
+.inv-add-field .field select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #333 50%),
+    linear-gradient(135deg, #333 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 12px) 50%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  background-color: #e2e6ea;
+}
+
+.inv-add-estado-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555b60;
+  margin-bottom: 0.35rem;
+  display: block;
+}

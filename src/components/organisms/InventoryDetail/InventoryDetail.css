@@ -1,0 +1,144 @@
+.inv-add-card-detalle {
+    grid-template-columns: 1fr;
+    width: 1100px;
+    max-width: 96vw;
+    height: 680px;
+}
+
+.inv-detalle-main {
+    background: #ffffff;
+    padding: 2.4rem 2.8rem 2rem;
+}
+
+.inv-detalle-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 0.9rem;
+}
+
+.inv-detalle-header h2 {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #111111;
+    margin: 0 0 0.25rem;
+}
+
+.inv-detalle-header p {
+    font-size: 0.9rem;
+    color: #8c8f93;
+    margin: 0;
+}
+
+.inv-detalle-clues {
+    text-align: right;
+}
+
+.inv-detalle-clues-code {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #111111;
+}
+
+.inv-detalle-clues-nombre {
+    display: block;
+    font-size: 0.8rem;
+    color: #8c8f93;
+}
+
+.inv-detalle-separador {
+    height: 4px;
+    background: #c6922b;
+    border-radius: 999px;
+    margin: 0.4rem 0 1.4rem;
+}
+
+.inv-detalle-separador-bottom {
+    margin: 2.1rem 0 0.8rem;
+}
+
+.inv-detalle-icon-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.8rem;
+}
+
+.inv-detalle-icon-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: #e2e6ea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555b60;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.inv-detalle-section {
+    margin-top: 0.8rem;
+}
+
+.inv-detalle-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.inv-detalle-card-full {
+    grid-column: 1 / -1;
+}
+
+.inv-detalle-card {
+    background: #f4f6f8;
+    border-radius: 20px;
+    padding: 0.7rem 1rem;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e0e4ea;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.inv-detalle-label {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #8c8f93;
+}
+
+.inv-detalle-value {
+    font-size: 0.9rem;
+    color: #202326;
+}
+
+.inv-detalle-value-mono {
+    font-family: monospace;
+}
+
+.inv-detalle-footer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.4rem;
+}
+
+.inv-detalle-footnote {
+    font-size: 0.78rem;
+    color: #acaba5;
+}
+
+.inv-detalle-footer-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.inv-detalle-footer-img {
+    max-width: 40px;
+    height: auto;
+}
