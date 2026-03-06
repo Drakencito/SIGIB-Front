@@ -32,11 +32,10 @@ export interface Empleado {
 export type CategoriaInventario =
   | 'equipo_computo'
   | 'equipo_red'
-  | 'consumible_tinta'
-  | 'consumible_toner'
+  | 'consumible'
   | 'refaccion'
 
-export type EstadoInventario = 'excelente' | 'bueno' | 'malo' | 'muy_malo'
+export type EstadoInventario = 'excelente' | 'bueno' | 'regular' | 'malo' | 'muy_malo'
 
 export interface ItemInventario {
   id: number

@@ -5,7 +5,6 @@ import {
   Plus,
   Monitor,
   Wifi,
-  Droplets,
   Printer,
   Wrench,
   Trash2,
@@ -23,74 +22,48 @@ import './Inventarios.css'
 const categoriaLabel: Record<CategoriaInventario, string> = {
   equipo_computo: 'Equipo Cómputo',
   equipo_red: 'Equipo de Red',
-  consumible_tinta: 'Tinta',
-  consumible_toner: 'Tóner',
+  consumible: 'Consumible',
   refaccion: 'Refacción',
 }
 
 const categoriaIcono: Record<CategoriaInventario, ReactElement> = {
   equipo_computo: <Monitor size={24} />,
   equipo_red: <Wifi size={24} />,
-  consumible_tinta: <Droplets size={24} />,
-  consumible_toner: <Printer size={24} />,
+  consumible: <Printer size={24} />,
   refaccion: <Wrench size={24} />,
 }
-
-const estadoColor: Record<EstadoInventario, string> = {
-  excelente: '#006657',
-  bueno: '#2e7d32',
-  malo: '#a57f2c',
-  muy_malo: '#9b2247',
-}
-
-const estadoLabel: Record<EstadoInventario, string> = {
-  excelente: 'Excelente',
-  bueno: 'Bueno',
-  malo: 'Malo',
-  muy_malo: 'Muy Malo',
-}
-
 type ModoFormulario = 'crear' | 'editar'
 
-type EstadoClaveVisual = 'muy_malo' | 'malo' | 'regular' | 'bueno' | 'excelente'
+type EstadoClave = 'muy_malo' | 'malo' | 'regular' | 'bueno' | 'excelente'
 
-const estadosLinea: { key: EstadoClaveVisual; label: string }[] = [
-  { key: 'muy_malo', label: 'Muy malo' },
-  { key: 'malo', label: 'Malo' },
-  { key: 'regular', label: 'Regular' },
-  { key: 'bueno', label: 'Bueno' },
-  { key: 'excelente', label: 'Excelente' },
-]
-
-const estadoColorBarra: Record<EstadoClaveVisual, string> = {
-  muy_malo: '#f44336',
-  malo: '#ff9800',
-  regular: '#ffc107',
-  bueno: '#8bc34a',
-  excelente: '#4caf50',
+type EstadoInfo = {
+  key: EstadoClave
+  label: string
+  color: string
 }
 
-/** Base: misma barra de pastillas para ambos modos */
+const ESTADOS: EstadoInfo[] = [
+  { key: 'muy_malo', label: 'Muy malo', color: '#f44336' },
+  { key: 'malo', label: 'Malo', color: '#ff9800' },
+  { key: 'regular', label: 'Regular', color: '#ffc107' },
+  { key: 'bueno', label: 'Bueno', color: '#8bc34a' },
+  { key: 'excelente', label: 'Excelente', color: '#4caf50' }, 
+]
+
+const estadoLabel: Record<EstadoInventario, string> = Object.fromEntries(
+  ESTADOS.map(e => [e.key, e.label]),
+) as Record<EstadoInventario, string>
 
 type EstadoBarProps =
   | {
-      mode: 'edit'
-      value: EstadoClaveVisual | null
-      onChange: (estado: EstadoClaveVisual) => void
-    }
+    mode: 'edit'
+    value: EstadoClave | null
+    onChange: (estado: EstadoClave) => void
+  }
   | {
-      mode: 'view'
-      estadoInventario: EstadoInventario
-    }
-
-function mapEstadoInventarioToVisual(estado: EstadoInventario): EstadoClaveVisual {
-  if (estado === 'muy_malo') return 'muy_malo'
-  if (estado === 'malo') return 'malo'
-  // si luego agregas "regular" a EstadoInventario, solo agregas esta línea:
-  // if (estado === 'regular') return 'regular'
-  if (estado === 'excelente') return 'excelente'
-  return 'bueno'
-}
+    mode: 'view'
+    estadoInventario: EstadoInventario
+  }
 
 function EstadoBar(props: EstadoBarProps) {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
@@ -98,21 +71,19 @@ function EstadoBar(props: EstadoBarProps) {
   const currentIndex =
     props.mode === 'edit'
       ? props.value != null
-        ? estadosLinea.findIndex(e => e.key === props.value)
+        ? ESTADOS.findIndex(e => e.key === props.value)
         : null
-      : estadosLinea.findIndex(
-          e => e.key === mapEstadoInventarioToVisual(props.estadoInventario),
-        )
+      : ESTADOS.findIndex(e => e.key === props.estadoInventario)
 
   const controllingIndex =
     props.mode === 'edit' && hoverIndex != null
       ? hoverIndex
       : currentIndex != null
-      ? currentIndex
-      : null
+        ? currentIndex
+        : null
 
   const controllingEstado =
-    controllingIndex != null ? estadosLinea[controllingIndex] : null
+    controllingIndex != null ? ESTADOS[controllingIndex] : null
 
   const showLabel =
     props.mode === 'edit'
@@ -122,13 +93,11 @@ function EstadoBar(props: EstadoBarProps) {
   return (
     <div className="estado-selector-wrapper">
       <div className="estado-selector-line">
-        {estadosLinea.map((estado, index) => {
+        {ESTADOS.map((estado, index) => {
           const active =
             controllingIndex != null && index <= controllingIndex
 
-          const color = controllingEstado
-            ? estadoColorBarra[controllingEstado.key]
-            : undefined
+          const color = controllingEstado?.color
 
           const className = [
             'estado-selector-dot',
@@ -182,7 +151,7 @@ function Inventarios() {
   const [itemSeleccionado, setItemSeleccionado] = useState<number | null>(null)
   const [soloLectura, setSoloLectura] = useState(false)
 
-  const [estadoForm, setEstadoForm] = useState<EstadoClaveVisual | null>(null)
+  const [estadoForm, setEstadoForm] = useState<EstadoClave | null>(null)
 
   const totalPorCategoria = (cat: CategoriaInventario) =>
     INVENTARIO.filter(i => i.categoria === cat).length
@@ -210,9 +179,7 @@ function Inventarios() {
       id: 'consumibles',
       icono: <Printer />,
       titulo: 'Consumibles',
-      subtitulo: `${
-        totalPorCategoria('consumible_tinta') + totalPorCategoria('consumible_toner')
-      } Piezas`,
+      subtitulo: `${totalPorCategoria('consumible')} Piezas`,
     },
     {
       id: 'refacciones',
@@ -265,7 +232,7 @@ function Inventarios() {
     setSoloLectura(false)
 
     if (item) {
-      setEstadoForm(mapEstadoInventarioToVisual(item.estado))
+      setEstadoForm(item.estado as EstadoClave)
     } else {
       setEstadoForm(null)
     }
@@ -458,6 +425,7 @@ function Inventarios() {
                     type="button"
                     className="inv-modal-btn-confirmar"
                     onClick={() => {
+                      // lógica real de eliminar
                       setItemAEliminar(null)
                     }}
                   >

@@ -709,8 +709,6 @@
   height: auto;
 }
 
-/* detalle */
-
 .inv-add-card-detalle {
   grid-template-columns: 1fr;
   width: 1100px;
@@ -932,15 +930,10 @@
   margin: 0;
 }
 
-/* visor (solo lectura) */
-
 .estado-visor {
   display: inline-flex;
   flex-direction: column;
   gap: 0.25rem;
-}
-
-.estado-visor-line {
 }
 
 .estado-visor .estado-selector-dot {
@@ -951,3 +944,4 @@
   font-size: 0.78rem;
   color: #555b60;
 }
+
