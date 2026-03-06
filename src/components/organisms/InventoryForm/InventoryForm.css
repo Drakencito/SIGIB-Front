@@ -86,40 +86,6 @@
     margin-top: 2.4rem;
 }
 
-.inv-add-btn-cancelar,
-.inv-add-btn-aceptar {
-    min-width: 170px;
-    border: none;
-    border-radius: 999px;
-    padding: 0.8rem 2rem;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 1rem;
-    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-}
-
-.inv-add-btn-cancelar {
-    background: #f3f3e7;
-    color: #4f5550;
-}
-
-.inv-add-btn-cancelar:hover {
-    background: #e4e7db;
-    transform: translateY(-1px);
-}
-
-.inv-add-btn-aceptar {
-    background: #006657;
-    color: #ffffff;
-    box-shadow: 0 8px 22px rgba(0, 102, 87, 0.4);
-}
-
-.inv-add-btn-aceptar:hover {
-    filter: brightness(0.96);
-    transform: translateY(-1px);
-}
-
 /* lado verde  */
 .inv-add-side {
     background: #006657;

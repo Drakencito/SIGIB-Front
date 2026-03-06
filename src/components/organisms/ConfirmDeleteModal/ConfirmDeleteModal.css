@@ -75,24 +75,3 @@
     text-transform: uppercase;
     transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
 }
-
-.confirm-modal-btn-cancelar {
-    background: #f3f3e7;
-    color: #4f5550;
-}
-
-.confirm-modal-btn-cancelar:hover {
-    background: #e4e7db;
-    transform: translateY(-1px);
-}
-
-.confirm-modal-btn-confirmar {
-    background: #b3261e;
-    color: #ffffff;
-    box-shadow: 0 8px 22px rgba(179, 38, 30, 0.4);
-}
-
-.confirm-modal-btn-confirmar:hover {
-    filter: brightness(0.96);
-    transform: translateY(-1px);
-}
