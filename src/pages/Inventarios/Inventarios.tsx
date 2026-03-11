@@ -1,11 +1,12 @@
 import { useState, useMemo } from "react";
-import { Search, Plus, Monitor, Wifi, Droplets, Wrench, Group, } from "lucide-react";
+import { Search, Plus, Monitor, Wifi, Droplets, Wrench, Group } from "lucide-react";
+import type { CategoriaInventario, EstadoInventario, ItemInventario } from "../../lib/types/types";
 import { INVENTARIO } from "../../lib/constants/inventario";
 import { UNIDADES } from "../../lib/constants/unidades";
-import type { CategoriaInventario, EstadoInventario } from "../../lib/types/types";
-import { categoriaLabel, } from "../../lib/constants/categoriaUI";
+import { categoriaLabel } from "../../lib/constants/categoriaUI";
 import { estadoLabel } from "../../components/molecules/EstadoBar/EstadoBar";
 import type { EstadoClave } from "../../components/molecules/EstadoBar/EstadoBar";
+import { exportarCSV } from "../../lib/utils/exportCsv";
 import Input from "../../components/atoms/Input/Input";
 import Select from "../../components/atoms/Select/Select";
 import Button from "../../components/atoms/Button/Button";
@@ -19,20 +20,17 @@ import "./Inventarios.css";
 
 type ModoFormulario = "crear" | "editar";
 
-const stats = [
-  { id: "total", icono: <Group size={28} />, titulo: "Total", subtitulo: `${INVENTARIO.length} Unidades` },
-  { id: "computo", icono: <Monitor size={28} />, titulo: "Cómputo", subtitulo: `${INVENTARIO.filter(i => i.categoria === "equipo_computo").length} Equipos` },
-  { id: "red", icono: <Wifi size={28} />, titulo: "Red", subtitulo: `${INVENTARIO.filter(i => i.categoria === "equipo_red").length} Dispositivos` },
-  { id: "consumibles", icono: <Droplets size={28} />, titulo: "Consumibles", subtitulo: `${INVENTARIO.filter(i => i.categoria === "consumible").length} Piezas` },
-  { id: "refacciones", icono: <Wrench size={28} />, titulo: "Refacciones", subtitulo: `${INVENTARIO.filter(i => i.categoria === "refaccion").length} Piezas` },
-];
-
 function Inventarios() {
-  const [busqueda, setBusqueda] = useState("");
-  const [filtCat, setFiltCat] = useState<CategoriaInventario | "">("");
-  const [filtEstado, setFiltEstado] = useState<EstadoInventario | "">("");
-  const [filtClues, setFiltClues] = useState("");
+  // ── Items como estado ──
+  const [items, setItems] = useState<ItemInventario[]>(INVENTARIO);
 
+  // ── Filtros persistentes ──
+  const [busqueda, setBusqueda] = useState(() => sessionStorage.getItem('inv_busqueda') ?? '');
+  const [filtCat, setFiltCat] = useState<CategoriaInventario | "">(() => (sessionStorage.getItem('inv_cat') ?? '') as CategoriaInventario | '');
+  const [filtEstado, setFiltEstado] = useState<EstadoInventario | "">(() => (sessionStorage.getItem('inv_estado') ?? '') as EstadoInventario | '');
+  const [filtClues, setFiltClues] = useState(() => sessionStorage.getItem('inv_clues') ?? '');
+
+  // ── UI state ──
   const [itemAEliminar, setItemAEliminar] = useState<number | null>(null);
   const [abiertoFormulario, setAbiertoFormulario] = useState(false);
   const [modoFormulario, setModoFormulario] = useState<ModoFormulario>("crear");
@@ -40,9 +38,19 @@ function Inventarios() {
   const [soloLectura, setSoloLectura] = useState(false);
   const [estadoForm, setEstadoForm] = useState<EstadoClave | null>(null);
 
+  // ── Stats dinámicos ──
+  const stats = [
+    { id: "", icono: <Group size={28} />, titulo: "Total", subtitulo: `${items.length} Unidades`, cat: "" },
+    { id: "equipo_computo", icono: <Monitor size={28} />, titulo: "Cómputo", subtitulo: `${items.filter(i => i.categoria === "equipo_computo").length} Equipos`, cat: "equipo_computo" },
+    { id: "equipo_red", icono: <Wifi size={28} />, titulo: "Red", subtitulo: `${items.filter(i => i.categoria === "equipo_red").length} Dispositivos`, cat: "equipo_red" },
+    { id: "consumible", icono: <Droplets size={28} />, titulo: "Consumibles", subtitulo: `${items.filter(i => i.categoria === "consumible").length} Piezas`, cat: "consumible" },
+    { id: "refaccion", icono: <Wrench size={28} />, titulo: "Refacciones", subtitulo: `${items.filter(i => i.categoria === "refaccion").length} Piezas`, cat: "refaccion" },
+  ];
+
+  // ── Filtrado ──
   const datos = useMemo(() => {
     const texto = busqueda.toLowerCase();
-    return INVENTARIO.filter(item => {
+    return items.filter(item => {
       const coincideTexto =
         !busqueda ||
         item.marca.toLowerCase().includes(texto) ||
@@ -54,12 +62,27 @@ function Inventarios() {
       const coincideClues = !filtClues || item.clues === filtClues;
       return coincideTexto && coincideCat && coincideEstado && coincideClues;
     });
-  }, [busqueda, filtCat, filtEstado, filtClues]);
+  }, [items, busqueda, filtCat, filtEstado, filtClues]);
 
   const itemActual = itemSeleccionado !== null
-    ? INVENTARIO.find(i => i.id === itemSeleccionado) ?? null
+    ? items.find(i => i.id === itemSeleccionado) ?? null
     : null;
 
+  // ── Handlers filtros ──
+  const handleStatClick = (cat: string) => {
+    const nuevo = filtCat === cat ? "" : cat as CategoriaInventario | "";
+    setFiltCat(nuevo);
+    sessionStorage.setItem('inv_cat', nuevo);
+  };
+
+  const limpiarFiltros = () => {
+    setBusqueda(''); sessionStorage.removeItem('inv_busqueda');
+    setFiltCat(''); sessionStorage.removeItem('inv_cat');
+    setFiltEstado(''); sessionStorage.removeItem('inv_estado');
+    setFiltClues(''); sessionStorage.removeItem('inv_clues');
+  };
+
+  // ── Handlers CRUD ──
   const abrirCrear = () => {
     setItemSeleccionado(null);
     setModoFormulario("crear");
@@ -75,7 +98,7 @@ function Inventarios() {
   };
 
   const abrirEditar = (id: number) => {
-    const item = INVENTARIO.find(i => i.id === id);
+    const item = items.find(i => i.id === id);
     setItemSeleccionado(id);
     setModoFormulario("editar");
     setSoloLectura(false);
@@ -93,11 +116,17 @@ function Inventarios() {
           <h1>Gestión de Inventarios</h1>
           <p>Administra los equipos e insumos de las unidades médicas</p>
         </div>
-        <Button variant="primary" size="md" onClick={abrirCrear}>
-          <Plus size={18} /> Agregar equipo
-        </Button>
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <Button variant="secondary" size="md" onClick={() => exportarCSV(datos)}>
+            Exportar CSV
+          </Button>
+          <Button variant="primary" size="md" onClick={abrirCrear}>
+            <Plus size={18} /> Agregar equipo
+          </Button>
+        </div>
       </div>
 
+      {/* Stats clicables */}
       <div className="inv-stats">
         {stats.map(card => (
           <SummaryCard
@@ -105,23 +134,26 @@ function Inventarios() {
             icono={card.icono}
             titulo={card.titulo}
             subtitulo={card.subtitulo}
+            activo={filtCat === card.cat}
+            onClick={() => handleStatClick(card.cat)}
           />
         ))}
       </div>
 
+      {/* Filtros */}
       <div className="inv-filtros">
         <div className="inv-search">
           <Search size={16} className="inv-search-icon" />
           <Input
             placeholder="Buscar por marca, modelo, serie..."
             value={busqueda}
-            onChange={e => setBusqueda(e.target.value)}
+            onChange={e => { setBusqueda(e.target.value); sessionStorage.setItem('inv_busqueda', e.target.value) }}
           />
         </div>
 
         <Select
           value={filtCat}
-          onChange={e => setFiltCat(e.target.value as CategoriaInventario | "")}
+          onChange={e => { setFiltCat(e.target.value as CategoriaInventario | ""); sessionStorage.setItem('inv_cat', e.target.value) }}
         >
           <option value="">Todas las categorías</option>
           {Object.entries(categoriaLabel).map(([k, v]) => (
@@ -131,7 +163,7 @@ function Inventarios() {
 
         <Select
           value={filtEstado}
-          onChange={e => setFiltEstado(e.target.value as EstadoInventario | "")}
+          onChange={e => { setFiltEstado(e.target.value as EstadoInventario | ""); sessionStorage.setItem('inv_estado', e.target.value) }}
         >
           <option value="">Todos los estados</option>
           {Object.entries(estadoLabel).map(([k, v]) => (
@@ -141,7 +173,7 @@ function Inventarios() {
 
         <Select
           value={filtClues}
-          onChange={e => setFiltClues(e.target.value)}
+          onChange={e => { setFiltClues(e.target.value); sessionStorage.setItem('inv_clues', e.target.value) }}
         >
           <option value="">Todas las unidades</option>
           {UNIDADES.filter(u => u.estatus === "activa").map(u => (
@@ -152,22 +184,28 @@ function Inventarios() {
 
       <InventoryTable
         items={datos}
+        busqueda={busqueda}
         onRowClick={abrirDetalle}
         onEdit={abrirEditar}
         onDelete={setItemAEliminar}
+        onClearFilters={limpiarFiltros}
       />
-      <p className="inv-count">{datos.length} de {INVENTARIO.length} registros</p>
+      <p className="inv-count">{datos.length} de {items.length} registros</p>
+
       {itemAEliminar !== null && (
-        <Modal onBackdropClick={() => setItemAEliminar(null)}>
+        <Modal onClose={() => setItemAEliminar(null)}>
           <ConfirmDeleteModal
             onCancel={() => setItemAEliminar(null)}
-            onConfirm={() => setItemAEliminar(null)}
+            onConfirm={() => {
+              setItems(prev => prev.filter(i => i.id !== itemAEliminar));
+              setItemAEliminar(null);
+            }}
           />
         </Modal>
       )}
 
       {abiertoFormulario && (
-        <Modal onBackdropClick={cerrarFormulario}>
+        <Modal onClose={cerrarFormulario}>
           {soloLectura && itemActual
             ? <InventoryDetail item={itemActual} onClose={cerrarFormulario} />
             : <InventoryForm
@@ -181,6 +219,7 @@ function Inventarios() {
           }
         </Modal>
       )}
+
 
     </div>
   );

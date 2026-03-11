@@ -6,6 +6,7 @@ import "./ConfirmDeleteModal.css";
 interface ConfirmDeleteModalProps {
     titulo?: string;
     mensaje?: string;
+    labelConfirmar?: string;
     onCancel: () => void;
     onConfirm: () => void;
 }
@@ -13,6 +14,7 @@ interface ConfirmDeleteModalProps {
 const ConfirmDeleteModal: FC<ConfirmDeleteModalProps> = ({
     titulo = "Eliminar equipo",
     mensaje = "¿Estás seguro que deseas eliminar este equipo? Esta acción no se puede deshacer.",
+    labelConfirmar = "Sí, Eliminar",
     onCancel,
     onConfirm,
 }) => {
@@ -32,7 +34,7 @@ const ConfirmDeleteModal: FC<ConfirmDeleteModalProps> = ({
                             Cancelar
                         </Button>
                         <Button variant="danger" size="sm" onClick={onConfirm}>
-                            Sí, Eliminar
+                            {labelConfirmar}
                         </Button>
                     </div>
                 </div>

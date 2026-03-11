@@ -142,3 +142,51 @@
     max-width: 40px;
     height: auto;
 }
+
+/* responsividad p/ movil*/
+@media (max-width: 768px) {
+    .inv-add-card-detalle {
+        width: 100%;
+        height: auto;
+        max-height: 90vh;
+        overflow-y: auto;
+        border-radius: 20px;
+    }
+
+    .inv-detalle-main {
+        padding: 1.5rem 1.2rem 1.2rem;
+    }
+
+    .inv-detalle-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .inv-detalle-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .inv-detalle-clues {
+        text-align: left;
+    }
+
+    .inv-detalle-row {
+        grid-template-columns: 1fr;
+    }
+
+    .inv-detalle-footer {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        text-align: center;
+    }
+
+    .inv-detalle-footer-center {
+        position: static;
+        transform: none;
+    }
+
+    .inv-detalle-footnote {
+        order: 2;
+    }
+}

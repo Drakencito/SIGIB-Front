@@ -6,4 +6,13 @@
     align-items: center;
     justify-content: center;
     z-index: 200;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+@media (max-width: 480px) {
+    .modal-backdrop {
+        align-items: flex-end;
+        padding: 0;
+    }
 }

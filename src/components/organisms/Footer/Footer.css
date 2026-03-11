@@ -24,3 +24,29 @@
     letter-spacing: 0.05em;
     text-align: center;
 }
+/* responsividad p/ movil*/
+@media (max-width: 768px) {
+    .footer {
+        height: auto;
+        min-height: 60px;
+        padding: 0.75rem 1rem;
+    }
+
+    .footer-img-left img {
+        height: 36px;
+    }
+
+    .footer-img-right img {
+        height: 36px;
+    }
+
+    .footer-copy {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-img-right {
+        display: none;
+    }
+}

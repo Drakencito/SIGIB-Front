@@ -1,19 +1,31 @@
-import type { FC, ReactNode } from "react";
-import "./Modal.css";
+import { useEffect, type FC, type ReactNode } from 'react'
+import './Modal.css'
 
 interface ModalProps {
-    children: ReactNode;
-    onBackdropClick?: () => void;
+    onClose: () => void
+    children: ReactNode
 }
 
-const Modal: FC<ModalProps> = ({ children, onBackdropClick }) => {
-    return (
-        <div className="modal-backdrop" onClick={onBackdropClick}>
-            <div onClick={e => e.stopPropagation()}>
-                {children}
-            </div>
-        </div>
-    );
-};
+const Modal: FC<ModalProps> = ({ onClose, children }) => {
 
-export default Modal;
+    useEffect(() => {
+        const handler = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose()
+        }
+        document.addEventListener('keydown', handler)
+        return () => document.removeEventListener('keydown', handler)
+    }, [onClose])
+
+    return (
+        <div
+            className="modal-backdrop"
+            onMouseDown={(e) => {
+                if (e.target === e.currentTarget) onClose()
+            }}
+        >
+            {children}
+        </div>
+    )
+}
+
+export default Modal

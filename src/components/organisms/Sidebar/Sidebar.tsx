@@ -1,11 +1,13 @@
 import { useState, forwardRef } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { Package, FileText, Ticket, Home, Search, LogOut, User } from 'lucide-react'
+import { Package, FileText, Ticket, Home, Search, LogOut, User, X } from 'lucide-react'
 import { useAuth } from '../../../lib/store/AuthContext'
 import './Sidebar.css'
 
 interface Props {
   topPx: number
+  mobileOpen?: boolean
+  onMobileClose?: () => void
 }
 
 const items = [
@@ -15,11 +17,13 @@ const items = [
   { to: '/tickets', icon: Ticket, label: 'Tickets de Soporte' },
 ]
 
-const Sidebar = forwardRef<HTMLElement, Props>(({ topPx }, ref) => {
-  const [open, setOpen] = useState<boolean>(false)
+const Sidebar = forwardRef<HTMLElement, Props>(({ topPx, mobileOpen = false, onMobileClose }, ref) => {
+  const [hoverOpen, setHoverOpen] = useState<boolean>(false)
   const [busqueda, setBusqueda] = useState<string>('')
   const { usuario, logout } = useAuth()
   const navigate = useNavigate()
+
+  const isOpen = hoverOpen || mobileOpen
 
   const handleLogout = () => {
     logout()
@@ -29,26 +33,35 @@ const Sidebar = forwardRef<HTMLElement, Props>(({ topPx }, ref) => {
   return (
     <aside
       ref={ref}
-      className={`sidebar ${open ? 'open' : ''}`}
+      className={`sidebar ${isOpen ? 'open' : ''}`}
       style={{ top: `${topPx}px` }}
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => { setOpen(false); setBusqueda('') }}
+      onMouseEnter={() => setHoverOpen(true)}
+      onMouseLeave={() => { setHoverOpen(false); setBusqueda('') }}
     >
       <div className="sidebar-profile">
         <div className="sidebar-avatar">
           <User size={18} />
         </div>
-        {open && (
+        {isOpen && (
           <div className="sidebar-greet">
             <span className="sidebar-hola">Hola,</span>
             <span className="sidebar-nombre">{usuario?.nombre ?? 'Usuario'}</span>
           </div>
         )}
+        {mobileOpen && (
+          <button
+            className="sidebar-close-btn"
+            onClick={onMobileClose}
+            aria-label="Cerrar menú"
+          >
+            <X size={18} />
+          </button>
+        )}
       </div>
 
       <div className="sidebar-search-wrap">
         <Search size={16} className="sidebar-search-icon" />
-        {open && (
+        {isOpen && (
           <input
             className="sidebar-search"
             type="text"
@@ -69,9 +82,10 @@ const Sidebar = forwardRef<HTMLElement, Props>(({ topPx }, ref) => {
               key={to}
               to={to}
               className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}
+              onClick={() => { if (mobileOpen) onMobileClose?.() }}
             >
               <span className="sidebar-icon"><Icon size={20} /></span>
-              {open && <span className="sidebar-label">{label}</span>}
+              {isOpen && <span className="sidebar-label">{label}</span>}
             </NavLink>
           ))}
       </nav>
@@ -80,7 +94,7 @@ const Sidebar = forwardRef<HTMLElement, Props>(({ topPx }, ref) => {
         <div className="sidebar-divider" />
         <button className="sidebar-logout" onClick={handleLogout}>
           <span className="sidebar-icon"><LogOut size={20} /></span>
-          {open && <span className="sidebar-label">Cerrar Sesión</span>}
+          {isOpen && <span className="sidebar-label">Cerrar Sesión</span>}
         </button>
       </div>
     </aside>

@@ -161,45 +161,107 @@
 }
 
 .inv-add-field .field {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .inv-add-field .field label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #555b60;
-  text-transform: none;
-  letter-spacing: normal;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555b60;
+    text-transform: none;
+    letter-spacing: normal;
 }
 
 .inv-add-field .field input,
 .inv-add-field .field select {
-  width: 100%;
-  padding: 0.7rem 0.9rem;
-  border-radius: 10px;
-  border: none;
-  background: #e2e6ea;
-  font-size: 0.95rem;
-  color: #202326;
-  outline: none;
-  border-bottom: none;
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border-radius: 10px;
+    border: none;
+    background: #e2e6ea;
+    font-size: 0.95rem;
+    color: #202326;
+    outline: none;
+    border-bottom: none;
 }
 
 .inv-add-field .field select {
-  appearance: none;
-  background-image:
-    linear-gradient(45deg, transparent 50%, #333 50%),
-    linear-gradient(135deg, #333 50%, transparent 50%);
-  background-position: calc(100% - 18px) 50%, calc(100% - 12px) 50%;
-  background-size: 6px 6px, 6px 6px;
-  background-repeat: no-repeat;
-  background-color: #e2e6ea;
+    appearance: none;
+    background-image:
+        linear-gradient(45deg, transparent 50%, #333 50%),
+        linear-gradient(135deg, #333 50%, transparent 50%);
+    background-position: calc(100% - 18px) 50%, calc(100% - 12px) 50%;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    background-color: #e2e6ea;
 }
 
 .inv-add-estado-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #555b60;
-  margin-bottom: 0.35rem;
-  display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555b60;
+    margin-bottom: 0.35rem;
+    display: block;
+}
+
+/*validaciones*/
+.inv-add-field--error .field input,
+.inv-add-field--error .field select {
+    border-bottom: 2px solid #b3261e !important;
+    background: #fff8f7 !important;
+}
+
+.inv-field-error {
+    display: block;
+    font-size: 0.74rem;
+    color: #b3261e;
+    font-weight: 600;
+    margin-top: 0.2rem;
+}
+
+.inv-field-error--inline {
+    display: inline;
+    margin-left: 0.5rem;
+}
+
+/* Responsividad p/movil*/
+@media (max-width: 768px) {
+    .inv-add-card {
+        grid-template-columns: 1fr;
+        width: 100%;
+        border-radius: 20px;
+    }
+
+    .inv-add-side {
+        display: none;
+    }
+
+    .inv-add-main {
+        padding: 1.5rem 1.2rem 1.2rem;
+    }
+
+    .inv-add-header h2 {
+        font-size: 1.4rem;
+    }
+
+    .inv-add-header p {
+        font-size: 0.85rem;
+    }
+
+    .inv-add-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .inv-add-field-full {
+        grid-column: 1;
+    }
+
+    .inv-add-actions {
+        flex-direction: column-reverse;
+        gap: 0.75rem;
+    }
+
+    .inv-add-actions .btn {
+        width: 100%;
+    }
 }
