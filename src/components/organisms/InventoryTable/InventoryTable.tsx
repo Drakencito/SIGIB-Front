@@ -10,10 +10,10 @@ import './InventoryTable.css'
 
 export interface InventoryTableProps {
     items: ItemInventario[]
-    busqueda?: string          // ← nuevo para resaltar
-    onRowClick?:     (id: number) => void
-    onEdit?:         (id: number) => void
-    onDelete?:       (id: number) => void
+    busqueda?: string         
+    onRowClick?: (id: number) => void
+    onEdit?: (id: number) => void
+    onDelete?: (id: number) => void
     onClearFilters?: () => void
 }
 
@@ -38,7 +38,7 @@ function Highlight({ text, query }: { text: string; query?: string }) {
 
 function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey | null; sortDir: SortDir }) {
     if (sortKey !== col) return <ChevronsUpDown size={13} className="inv-sort-icon inv-sort-icon--idle" />
-    if (sortDir === 'asc')  return <ChevronUp   size={13} className="inv-sort-icon inv-sort-icon--active" />
+    if (sortDir === 'asc') return <ChevronUp size={13} className="inv-sort-icon inv-sort-icon--active" />
     return <ChevronDown size={13} className="inv-sort-icon inv-sort-icon--active" />
 }
 
@@ -50,8 +50,8 @@ const InventoryTable: FC<InventoryTableProps> = ({
 
     const handleSort = (col: SortKey) => {
         if (sortKey !== col) { setSortKey(col); setSortDir('asc'); return }
-        if (sortDir === 'asc')  { setSortDir('desc'); return }
-        setSortKey(null); setSortDir(null)  
+        if (sortDir === 'asc') { setSortDir('desc'); return }
+        setSortKey(null); setSortDir(null)
     }
 
     const sorted = useMemo(() => {
@@ -71,7 +71,6 @@ const InventoryTable: FC<InventoryTableProps> = ({
         </th>
     )
 
-    // ── Empty state ──
     if (items.length === 0) {
         return (
             <div className="inv-empty-state">
@@ -94,17 +93,17 @@ const InventoryTable: FC<InventoryTableProps> = ({
                     <thead>
                         <tr>
                             {th('Marca / Modelo', 'marca')}
-                            {th('No. Serie',      'noSerie')}
-                            {th('Categoría',      'categoria')}
-                            {th('Departamento',   'departamento')}
-                            {th('Unidad médica',  'clues')}
+                            {th('No. Serie', 'noSerie')}
+                            {th('Categoría', 'categoria')}
+                            {th('Departamento', 'departamento')}
+                            {th('Unidad médica', 'clues')}
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {sorted.map(item => (
                             <tr key={item.id} onClick={() => onRowClick?.(item.id)}>
-                                <td>
+                                <td data-label="Marca / Modelo">
                                     <span className="inv-marca">
                                         <Highlight text={item.marca} query={busqueda} />
                                     </span>
@@ -112,20 +111,22 @@ const InventoryTable: FC<InventoryTableProps> = ({
                                         <Highlight text={item.modelo} query={busqueda} />
                                     </span>
                                 </td>
-                                <td className="inv-serie">
+                                <td data-label="No. Serie" className="inv-serie">
                                     <Highlight text={item.noSerie} query={busqueda} />
                                 </td>
-                                <td><Badge>{item.categoria}</Badge></td>
-                                <td>
+                                <td data-label="Categoría">
+                                    <Badge>{item.categoria}</Badge>
+                                </td>
+                                <td data-label="Departamento">
                                     <Highlight text={item.departamento} query={busqueda} />
                                 </td>
-                                <td>
+                                <td data-label="Unidad médica">
                                     <span className="inv-clues-nombre">
                                         <Highlight text={getUnidadNombre(item.clues)} query={busqueda} />
                                     </span>
                                     <span className="inv-clues-code">{item.clues}</span>
                                 </td>
-                                <td>
+                                <td data-label="Acciones">
                                     <div className="inv-acciones" onClick={e => e.stopPropagation()}>
                                         <IconButton aria-label="Editar" onClick={() => onEdit?.(item.id)}>
                                             <Pencil size={18} />
@@ -138,6 +139,7 @@ const InventoryTable: FC<InventoryTableProps> = ({
                             </tr>
                         ))}
                     </tbody>
+
                 </table>
             </div>
         </div>

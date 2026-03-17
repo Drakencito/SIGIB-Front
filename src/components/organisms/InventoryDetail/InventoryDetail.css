@@ -1,3 +1,14 @@
+.inv-add-card {
+    width: 1100px;
+    max-width: 96vw;
+    background: #ffffff;
+    border-radius: 30px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+    display: grid;
+    grid-template-columns: 1.6fr 1.1fr;
+    overflow: hidden;
+}
+
 .inv-add-card-detalle {
     grid-template-columns: 1fr;
     width: 1100px;
@@ -143,50 +154,62 @@
     height: auto;
 }
 
-/* responsividad p/ movil*/
 @media (max-width: 768px) {
     .inv-add-card-detalle {
-        width: 100%;
-        height: auto;
-        max-height: 90vh;
-        overflow-y: auto;
+        width: 92vw !important;
+        max-width: 92vw !important;
+        height: auto !important;
+        max-height: 88dvh;        
         border-radius: 20px;
+        display: flex;
+        flex-direction: column;
     }
 
     .inv-detalle-main {
-        padding: 1.5rem 1.2rem 1.2rem;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;        
+        padding: 1.4rem 1.2rem 1rem;
     }
 
     .inv-detalle-header {
-        flex-direction: column;
-        gap: 0.5rem;
+        flex-shrink: 0;
     }
 
-    .inv-detalle-header h2 {
-        font-size: 1.3rem;
+    .inv-detalle-separador {
+        flex-shrink: 0;
     }
 
-    .inv-detalle-clues {
-        text-align: left;
+    .inv-detalle-icon-wrap {
+        flex-shrink: 0;
+        margin-bottom: 1rem;
     }
 
-    .inv-detalle-row {
-        grid-template-columns: 1fr;
+    .inv-detalle-section {
+        overflow-y: auto;
+        flex: 1;
+        min-height: 0;           
+        padding-right: 0.3rem;
+        scrollbar-width: thin;
+        scrollbar-color: #c4d0c4 transparent;
+    }
+
+    .inv-detalle-separador-bottom {
+        flex-shrink: 0;
+        margin-top: 0.8rem;
     }
 
     .inv-detalle-footer {
-        flex-direction: column;
-        align-items: center;
-        gap: 0.75rem;
-        text-align: center;
+        flex-shrink: 0;
+        padding-bottom: 0.5rem;
     }
 
-    .inv-detalle-footer-center {
-        position: static;
-        transform: none;
+    .inv-detalle-row {
+        grid-template-columns: 1fr !important;
     }
 
-    .inv-detalle-footnote {
-        order: 2;
+    .inv-detalle-card-full {
+        grid-column: 1 !important;
     }
 }

@@ -100,3 +100,32 @@
         height: 40px;
     }
 }
+
+@media (max-width: 600px) {
+    .header {
+        padding: 0 1rem;
+        gap: 0.5rem;
+    }
+
+    .header-brand {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.1rem;
+    }
+
+    .header-sigib {
+        font-size: 1.1rem;
+    }
+
+    .header-sub {
+        font-size: 0.62rem;
+    }
+
+    .header-left img {
+        height: 32px;
+    }
+
+    .header-right img {
+        height: 44px;
+    }
+}

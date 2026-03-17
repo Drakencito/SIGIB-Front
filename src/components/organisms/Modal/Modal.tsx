@@ -4,10 +4,10 @@ import './Modal.css'
 interface ModalProps {
     onClose: () => void
     children: ReactNode
+    sheet?: boolean
 }
 
-const Modal: FC<ModalProps> = ({ onClose, children }) => {
-
+const Modal: FC<ModalProps> = ({ onClose, children, sheet = false }) => {
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
             if (e.key === 'Escape') onClose()
@@ -18,7 +18,7 @@ const Modal: FC<ModalProps> = ({ onClose, children }) => {
 
     return (
         <div
-            className="modal-backdrop"
+            className={`modal-backdrop${sheet ? ' modal-backdrop--sheet' : ''}`}
             onMouseDown={(e) => {
                 if (e.target === e.currentTarget) onClose()
             }}

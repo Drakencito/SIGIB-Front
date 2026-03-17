@@ -114,7 +114,6 @@
     transform: translateY(-1px);
 }
 
-/* celdas */
 .inv-marca {
     display: block;
     font-weight: 700;
@@ -160,7 +159,6 @@
     font-size: 0.9rem;
 }
 
-/* estado vacio */
 .inv-empty-state {
     display: flex;
     flex-direction: column;
@@ -192,6 +190,7 @@
     color: #8f9a8f;
     margin: 0 0 0.4rem;
 }
+
 .inv-th-sort {
     cursor: pointer;
     user-select: none;
@@ -209,8 +208,13 @@
     margin-bottom: 1px;
 }
 
-.inv-sort-icon--idle   { color: #b0bfb0; }
-.inv-sort-icon--active { color: #006657; }
+.inv-sort-icon--idle {
+    color: #b0bfb0;
+}
+
+.inv-sort-icon--active {
+    color: #006657;
+}
 
 .inv-highlight {
     background: #fff176;
@@ -220,18 +224,56 @@
     font-style: normal;
 }
 
-/* Responsividad p/movil*/
 @media (max-width: 768px) {
-    :root {
-        --inv-pad-v: 0.65rem;
-        --inv-pad-h: 0.8rem;
-    }
 
     .inv-tabla-scroll {
-        overflow-x: auto;
+        overflow-x: unset;
     }
 
-    .inv-tabla {
-        min-width: 580px;
+    .inv-tabla thead {
+        display: none;
+    }
+
+    .inv-tabla tbody tr {
+        display: flex;
+        flex-direction: column;
+        border-radius: 16px;
+        margin-bottom: 0.75rem;
+        padding: 0.6rem 0;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .inv-tabla tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.55rem 1rem;
+        border: none !important;
+        border-radius: 0 !important;
+        border-bottom: 1px solid #f0f2ee !important;
+        font-size: 0.85rem;
+    }
+
+    .inv-tabla tbody td:last-child {
+        border-bottom: none !important;
+    }
+
+    .inv-tabla tbody td::before {
+        content: attr(data-label);
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #7b8f73;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        flex-shrink: 0;
+        margin-right: 0.75rem;
+    }
+
+    .inv-tabla tbody td[data-label="Acciones"] {
+        justify-content: flex-end;
+    }
+
+    .inv-tabla tbody td[data-label="Acciones"]::before {
+        display: none;
     }
 }

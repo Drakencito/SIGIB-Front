@@ -6,6 +6,7 @@
     display: flex;
     flex-direction: column;
     transition: transform 0.16s ease, box-shadow 0.16s ease;
+    min-width: 0;
 }
 
 .summary-card:hover {
@@ -48,6 +49,8 @@
 .summary-card-texts {
     min-width: 0;
     flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .summary-card-title {
@@ -68,10 +71,13 @@
     text-overflow: ellipsis;
 }
 
+.summary-card-numero {
+    display: none;
+}
+
 .summary-card--clickable {
     cursor: pointer;
 }
-
 
 .summary-card--activo {
     outline: 2.5px solid #006657;
@@ -86,14 +92,95 @@
     background: #d4ede8;
 }
 
-@media (max-width: 1100px) {
-    .inv-stats {
-        grid-template-columns: repeat(3, 1fr);
+@media (max-width: 1024px) {
+    .summary-card-texts {
+        display: none;
+    }
+
+    .summary-card-numero {
+        display: block;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #082621;
+    }
+
+    .summary-card-content {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0.9rem 0.5rem 1rem;
+        gap: 0.3rem;
+        text-align: center;
+    }
+
+    .summary-card-icon-circle {
+        width: 44px;
+        height: 44px;
+    }
+
+    .summary-card-icon-circle svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .summary-card-top-green {
+        height: 10px;
     }
 }
 
-@media (max-width: 700px) {
-    .inv-stats {
-        grid-template-columns: repeat(2, 1fr);
+@media (max-width: 768px) {
+    .summary-card {
+        border-radius: 14px;
+    }
+
+    .summary-card-content {
+        padding: 0.6rem 0.3rem 0.7rem;
+        gap: 0.2rem;
+    }
+
+    .summary-card-icon-circle {
+        width: 32px;
+        height: 32px;
+    }
+
+    .summary-card-icon-circle svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    .summary-card-numero {
+        font-size: 0.82rem;
+    }
+
+    .summary-card-top-green {
+        height: 6px;
+    }
+
+    .summary-card-top-gold {
+        height: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-card-content {
+        padding: 0.5rem 0.2rem 0.6rem;
+    }
+
+    .summary-card-icon-circle {
+        width: 26px;
+        height: 26px;
+    }
+
+    .summary-card-icon-circle svg {
+        width: 13px;
+        height: 13px;
+    }
+
+    .summary-card-numero {
+        font-size: 0.72rem;
+    }
+
+    .summary-card-top-green {
+        height: 4px;
     }
 }

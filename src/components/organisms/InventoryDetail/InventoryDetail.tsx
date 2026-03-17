@@ -4,7 +4,6 @@ import { categoriaLabel, categoriaIcono } from "../../../lib/constants/categoria
 import { UNIDADES } from "../../../lib/constants/unidades";
 import EstadoBar from "../../molecules/EstadoBar/EstadoBar";
 import Button from "../../atoms/Button/Button";
-import "../InventoryForm/InventoryForm.css";
 import "./InventoryDetail.css";
 
 interface InventoryDetailProps {

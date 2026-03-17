@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import type { FC } from 'react'
-import { CheckCircle2, MonitorSmartphone, Hand } from 'lucide-react'
+import { CheckCircle2, MonitorSmartphone, Hand, Info, ChevronDown, ChevronUp } from 'lucide-react'
 import type { ItemInventario } from '../../../lib/types/types'
 import { categoriaLabel } from '../../../lib/constants/categoriaUI'
 import { UNIDADES } from '../../../lib/constants/unidades'
@@ -56,6 +56,7 @@ const InventoryForm: FC<InventoryFormProps> = ({
     const [errores, setErrores] = useState<Errores>({})
     const [intentado, setIntentado] = useState(false)
     const [showUnsaved, setShowUnsaved] = useState(false)
+    const [showIndicaciones, setShowIndicaciones] = useState(false)
 
     const set = (campo: keyof FormState, valor: string) => {
         const nuevo = { ...form, [campo]: valor }
@@ -127,131 +128,29 @@ const InventoryForm: FC<InventoryFormProps> = ({
     return (
         <>
             <div className="inv-add-card">
-                <div className="inv-add-main">
-                    <header className="inv-add-header">
-                        <h2>{esEditar ? 'Editar equipo' : 'Registrar nuevo equipo'}</h2>
-                        <p>
-                            {esEditar
-                                ? 'Actualiza los datos del equipo seleccionado.'
-                                : 'Captura los datos del equipo para agregarlo al inventario.'}
-                        </p>
-                    </header>
-
-                    <form className="inv-add-form" onSubmit={handleSubmit} noValidate>
-                        <div className="inv-add-grid">
-
-                            <div className={`inv-add-field${errores.marca ? ' inv-add-field--error' : ''}`}>
-                                <FormField
-                                    id="inv-marca" label="Marca" type="text"
-                                    value={form.marca}
-                                    onChange={e => set('marca', e.target.value)}
-                                    placeholder="Ej. Dell"
-                                />
-                                {errores.marca && <span className="inv-field-error">{errores.marca}</span>}
-                            </div>
-
-                            <div className={`inv-add-field${errores.modelo ? ' inv-add-field--error' : ''}`}>
-                                <FormField
-                                    id="inv-modelo" label="Modelo" type="text"
-                                    value={form.modelo}
-                                    onChange={e => set('modelo', e.target.value)}
-                                    placeholder="Ej. OptiPlex 3090"
-                                />
-                                {errores.modelo && <span className="inv-field-error">{errores.modelo}</span>}
-                            </div>
-
-                            <div className="inv-add-field inv-add-field-full">
-                                <FormField
-                                    id="inv-descripcion" label="Descripción" type="text"
-                                    value={form.descripcion}
-                                    onChange={e => set('descripcion', e.target.value)}
-                                    placeholder="Descripción breve del equipo"
-                                />
-                            </div>
-
-                            <div className={`inv-add-field${errores.categoria ? ' inv-add-field--error' : ''}`}>
-                                <SelectField
-                                    id="inv-categoria" label="Categoría"
-                                    value={form.categoria}
-                                    onChange={e => set('categoria', e.target.value)}
-                                >
-                                    <option value="">Seleccione categoría</option>
-                                    {Object.entries(categoriaLabel).map(([k, v]) => (
-                                        <option key={k} value={k}>{v}</option>
-                                    ))}
-                                </SelectField>
-                                {errores.categoria && <span className="inv-field-error">{errores.categoria}</span>}
-                            </div>
-
-                            <div className={`inv-add-field${errores.departamento ? ' inv-add-field--error' : ''}`}>
-                                <FormField
-                                    id="inv-departamento" label="Departamento" type="text"
-                                    value={form.departamento}
-                                    onChange={e => set('departamento', e.target.value)}
-                                    placeholder="Ej. Enfermería"
-                                />
-                                {errores.departamento && <span className="inv-field-error">{errores.departamento}</span>}
-                            </div>
-
-                            <div className={`inv-add-field${errores.noSerie ? ' inv-add-field--error' : ''}`}>
-                                <FormField
-                                    id="inv-serie" label="No. de serie" type="text"
-                                    value={form.noSerie}
-                                    onChange={e => set('noSerie', e.target.value)}
-                                    placeholder="Ej. DL3090-CHX-001"
-                                />
-                                {errores.noSerie && <span className="inv-field-error">{errores.noSerie}</span>}
-                            </div>
-
-                            <div className={`inv-add-field${errores.clues ? ' inv-add-field--error' : ''}`}>
-                                <SelectField
-                                    id="inv-clues" label="Unidad médica (CLUES)"
-                                    value={form.clues}
-                                    onChange={e => set('clues', e.target.value)}
-                                >
-                                    <option value="">Seleccione unidad</option>
-                                    {UNIDADES.filter(u => u.estatus === 'activa').map(u => (
-                                        <option key={u.clues} value={u.clues}>{u.nombre}</option>
-                                    ))}
-                                </SelectField>
-                                {errores.clues && <span className="inv-field-error">{errores.clues}</span>}
-                            </div>
-
-                        </div>
-
-                        <div className="inv-add-field inv-add-field-full">
-                            <label className="inv-add-estado-label">
-                                Estado
-                                {errores.estado && (
-                                    <span className="inv-field-error inv-field-error--inline">
-                                        {errores.estado}
-                                    </span>
-                                )}
-                            </label>
-                            <EstadoBar
-                                mode="edit"
-                                value={estadoForm}
-                                onChange={v => {
-                                    onEstadoChange(v)
-                                    if (intentado) setErrores(prev => ({ ...prev, estado: undefined }))
-                                }}
-                            />
-                        </div>
-
-                        <div className="inv-add-actions">
-                            <Button variant="secondary" size="md" type="button" onClick={handleCancel}>
-                                Cancelar
-                            </Button>
-                            <Button variant="primary" size="md" type="submit">
-                                {esEditar ? 'Actualizar' : 'Guardar'}
-                            </Button>
-                        </div>
-                    </form>
-                </div>
 
                 <aside className="inv-add-side">
-                    <div className="inv-add-side-body">
-                        <h3>Indicaciones para el<br /><span>Registro</span> de equipos</h3>
+                    <div className="inv-add-side-top">
+                        <div className="inv-add-side-body">
+                            <h3>Indicaciones para el<br /><span>Registro</span> de equipos</h3>
+                        </div>
+                        <div className="inv-add-side-right">
+                            <button
+                                type="button"
+                                className="inv-add-side-toggle"
+                                onClick={() => setShowIndicaciones(v => !v)}
+                                aria-label="Ver indicaciones"
+                            >
+                                <Info size={16} />
+                                {showIndicaciones ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                            </button>
+                            <div className="inv-add-side-image inv-add-side-image--mobile">
+                                <img src="/imagotipo.png" alt="IMSS Bienestar" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={`inv-add-side-list-wrap${showIndicaciones ? ' inv-add-side-list-wrap--open' : ''}`}>
                         <ul className="inv-add-side-list">
                             <li>
                                 <span className="inv-add-side-icon"><CheckCircle2 size={18} /></span>
@@ -267,11 +166,143 @@ const InventoryForm: FC<InventoryFormProps> = ({
                             </li>
                         </ul>
                     </div>
+
                     <div className="inv-add-side-bar" />
-                    <div className="inv-add-side-image">
+
+                    <div className="inv-add-side-image inv-add-side-image--desktop">
                         <img src="/imagotipo.png" alt="IMSS Bienestar" />
                     </div>
                 </aside>
+
+                <div className="inv-add-main">
+
+                    <header className="inv-add-header">
+                        <h2>{esEditar ? 'Editar equipo' : 'Registrar nuevo equipo'}</h2>
+                        <p>
+                            {esEditar
+                                ? 'Actualiza los datos del equipo seleccionado.'
+                                : 'Captura los datos del equipo para agregarlo al inventario.'}
+                        </p>
+                    </header>
+
+                    <div className="inv-add-separador" />
+
+                    <div className="inv-add-form-scroll">
+                        <form id="inv-form" onSubmit={handleSubmit} noValidate>
+                            <div className="inv-add-grid">
+
+                                <div className={`inv-add-field${errores.marca ? ' inv-add-field--error' : ''}`}>
+                                    <FormField
+                                        id="inv-marca" label="Marca" type="text"
+                                        value={form.marca}
+                                        onChange={e => set('marca', e.target.value)}
+                                        placeholder="Ej. Dell"
+                                    />
+                                    {errores.marca && <span className="inv-field-error">{errores.marca}</span>}
+                                </div>
+
+                                <div className={`inv-add-field${errores.modelo ? ' inv-add-field--error' : ''}`}>
+                                    <FormField
+                                        id="inv-modelo" label="Modelo" type="text"
+                                        value={form.modelo}
+                                        onChange={e => set('modelo', e.target.value)}
+                                        placeholder="Ej. OptiPlex 3090"
+                                    />
+                                    {errores.modelo && <span className="inv-field-error">{errores.modelo}</span>}
+                                </div>
+
+                                <div className="inv-add-field inv-add-field-full">
+                                    <FormField
+                                        id="inv-descripcion" label="Descripción" type="text"
+                                        value={form.descripcion}
+                                        onChange={e => set('descripcion', e.target.value)}
+                                        placeholder="Descripción breve del equipo"
+                                    />
+                                </div>
+
+                                <div className={`inv-add-field${errores.categoria ? ' inv-add-field--error' : ''}`}>
+                                    <SelectField
+                                        id="inv-categoria" label="Categoría"
+                                        value={form.categoria}
+                                        onChange={e => set('categoria', e.target.value)}
+                                    >
+                                        <option value="">Seleccione categoría</option>
+                                        {Object.entries(categoriaLabel).map(([k, v]) => (
+                                            <option key={k} value={k}>{v}</option>
+                                        ))}
+                                    </SelectField>
+                                    {errores.categoria && <span className="inv-field-error">{errores.categoria}</span>}
+                                </div>
+
+                                <div className={`inv-add-field${errores.departamento ? ' inv-add-field--error' : ''}`}>
+                                    <FormField
+                                        id="inv-departamento" label="Departamento" type="text"
+                                        value={form.departamento}
+                                        onChange={e => set('departamento', e.target.value)}
+                                        placeholder="Ej. Enfermería"
+                                    />
+                                    {errores.departamento && <span className="inv-field-error">{errores.departamento}</span>}
+                                </div>
+
+                                <div className={`inv-add-field${errores.noSerie ? ' inv-add-field--error' : ''}`}>
+                                    <FormField
+                                        id="inv-serie" label="No. de serie" type="text"
+                                        value={form.noSerie}
+                                        onChange={e => set('noSerie', e.target.value)}
+                                        placeholder="Ej. DL3090-CHX-001"
+                                    />
+                                    {errores.noSerie && <span className="inv-field-error">{errores.noSerie}</span>}
+                                </div>
+
+                                <div className={`inv-add-field${errores.clues ? ' inv-add-field--error' : ''}`}>
+                                    <SelectField
+                                        id="inv-clues" label="Unidad médica (CLUES)"
+                                        value={form.clues}
+                                        onChange={e => set('clues', e.target.value)}
+                                    >
+                                        <option value="">Seleccione unidad</option>
+                                        {UNIDADES.filter(u => u.estatus === 'activa').map(u => (
+                                            <option key={u.clues} value={u.clues}>{u.nombre}</option>
+                                        ))}
+                                    </SelectField>
+                                    {errores.clues && <span className="inv-field-error">{errores.clues}</span>}
+                                </div>
+
+                            </div>
+
+                            <div className="inv-add-field inv-add-field-full" style={{ marginTop: '1.2rem' }}>
+                                <label className="inv-add-estado-label">
+                                    Estado
+                                    {errores.estado && (
+                                        <span className="inv-field-error inv-field-error--inline">
+                                            {errores.estado}
+                                        </span>
+                                    )}
+                                </label>
+                                <EstadoBar
+                                    mode="edit"
+                                    value={estadoForm}
+                                    onChange={v => {
+                                        onEstadoChange(v)
+                                        if (intentado) setErrores(prev => ({ ...prev, estado: undefined }))
+                                    }}
+                                />
+                            </div>
+                        </form>
+                    </div>
+
+                    <div className="inv-add-separador inv-add-separador--bottom" />
+
+                    <div className="inv-add-actions">
+                        <Button variant="secondary" size="md" type="button" onClick={handleCancel}>
+                            Cancelar
+                        </Button>
+                        <Button variant="primary" size="md" type="submit" form="inv-form">
+                            {esEditar ? 'Actualizar' : 'Guardar'}
+                        </Button>
+                    </div>
+
+                </div>
             </div>
 
             {showUnsaved && (
@@ -279,7 +310,7 @@ const InventoryForm: FC<InventoryFormProps> = ({
                     <ConfirmDeleteModal
                         titulo="¿Descartar cambios?"
                         mensaje="Tienes cambios sin guardar. Si cierras ahora se perderán."
-                        labelConfirmar="Sí, Descartar"   
+                        labelConfirmar="Sí, Descartar"
                         onCancel={() => setShowUnsaved(false)}
                         onConfirm={() => { setShowUnsaved(false); onCancel() }}
                     />
