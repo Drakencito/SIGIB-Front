@@ -1,64 +1,68 @@
 export interface UsuarioAuth {
-  clues: string
-  nombre: string
-  rol: 'admin' | 'operador' | 'consulta'
+  clues: string;
+  nombre: string;
+  rol: 'admin' | 'operador' | 'consulta';
 }
 
-export type EstatusUnidad = 'activa' | 'inactiva'
+export type EstatusUnidad = 'activa' | 'inactiva';
 
 export interface UnidadMedica {
-  clues: string
-  nombre: string
-  clave: string
-  municipio: string
-  localidad: string
-  estatus: EstatusUnidad
+  clues: string;
+  nombre: string;
+  clave: string;
+  municipio: string;
+  localidad: string;
+  estatus: EstatusUnidad;
 }
 
-export type RolEmpleado = 'admin' | 'operador' | 'consulta'
+export type RolEmpleado = 'admin' | 'operador' | 'consulta';
 
 export interface Empleado {
-  id: number
-  nombre: string
-  rfc: string
-  curp: string
-  cluesAdscripcion: string
-  cluesActual: string
-  departamento: string
-  rol: RolEmpleado
+  id: number;
+  nombre: string;
+  rfc: string;
+  curp: string;
+  cluesAdscripcion: string;
+  cluesActual: string;
+  departamento: string;
+  rol: RolEmpleado;
 }
 
 // INVENTARIO
-export type CategoriaInventario =
-  | 'equipo_computo'
-  | 'equipo_red'
-  | 'consumible'
-  | 'refaccion'
-
-export type EstadoInventario = 'excelente' | 'bueno' | 'regular' | 'malo' | 'muy_malo'
+export type CategoriaInventario = 'equipo_computo' | 'equipo_red' | 'consumible' | 'refaccion';
+export type EstadoInventario = 'bueno' | 'regular' | 'malo'; // Actualizado con los 3 estados
 
 export interface ItemInventario {
-  id: number
-  marca: string
-  modelo: string
-  noSerie: string
-  descripcion: string
-  categoria: CategoriaInventario
-  departamento: string
-  estado: EstadoInventario
-  clues: string
+  id: number;
+  marca: string;
+  modelo: string;
+  noSerie: string;
+  descripcion: string;
+  categoria: CategoriaInventario;
+  departamento: string;
+  estado: EstadoInventario;
+  clues: string;
+  noInventario: string;
+  nombreGenerico: string;
+  clasImpr: string;
+  subrogado: string;
+  nombreEmpresa: string;
+  funcional: string;
+  motivoFuncionamiento: string;
+  observaciones: string;
+  resguardo: string;
 }
 
 // SOLICITUDES
-export type EstadoSolicitud = 'pendiente' | 'aprobada' | 'rechazada'
+export type EstadoSolicitud = 'pendiente' | 'aprobada' | 'rechazada';
 
 export interface SolicitudRecurso {
-  id: number
-  cluesSolicitante: string
-  categoria: CategoriaInventario
-  cantidad: number
-  modelo: string
-  descripcion: string
-  estado: EstadoSolicitud
-  fecha: string
+  id: number;
+  cluesSolicitante: string;
+  categoria: CategoriaInventario;
+  cantidad: number;
+  modelo: string;
+  descripcion: string;
+  estado: EstadoSolicitud;
+  fecha: string;
 }

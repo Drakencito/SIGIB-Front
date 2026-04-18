@@ -9,7 +9,7 @@
     cursor: pointer;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s, background 0.15s;
+    transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s, background 0.15s, border-color 0.2s;
 }
 
 .btn:hover {
@@ -49,10 +49,12 @@
 .btn--secondary {
     background: #f3f3e7;
     color: #4f5550;
+    border: 1.5px solid #b7bdb7;
 }
 
 .btn--secondary:hover {
     background: #e4e7db;
+    border-color: #c4cdc4;
 }
 
 .btn--danger {
@@ -104,7 +106,6 @@
     background: #f9d0cc;
 }
 
-/* ── full width ── */
 .btn--full {
     width: 100%;
 }

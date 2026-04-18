@@ -13,19 +13,24 @@
 
 .inv-add-main {
     grid-area: main;
-}
-
-.inv-add-side {
-    grid-area: side;
-}
-
-.inv-add-main {
     padding: 2.4rem 2.8rem 1.8rem;
     background: #ffffff;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     height: 100%;
+}
+
+.inv-add-side {
+    grid-area: side;
+    background: #006657;
+    color: #ffffff;
+    padding: 2.8rem 2.6rem 1.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+    scrollbar-width: none;
 }
 
 .inv-add-header {
@@ -86,33 +91,61 @@
     grid-column: 1 / -1;
 }
 
-.inv-add-field label {
+.inv-add-grid label {
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    color: #555b60 !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    margin-bottom: 0 !important;
+}
+
+.inv-add-grid input,
+.inv-add-grid select {
+    width: 100% !important;
+    padding: 0.7rem 0.9rem !important;
+    border-radius: 10px !important;
+    border: none !important;
+    background: #e2e6ea !important;
+    font-size: 0.95rem !important;
+    color: #202326 !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+}
+
+.inv-add-grid select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #333 50%), linear-gradient(135deg, #333 50%, transparent 50%) !important;
+    background-position: calc(100% - 18px) 50%, calc(100% - 12px) 50% !important;
+    background-size: 6px 6px, 6px 6px !important;
+    background-repeat: no-repeat !important;
+}
+
+.inv-add-field--error input,
+.inv-add-field--error select {
+    border-bottom: 2px solid #b3261e !important;
+    background: #fff8f7 !important;
+}
+
+.inv-add-estado-label {
     font-size: 0.85rem;
     font-weight: 600;
     color: #555b60;
+    margin-bottom: 0.35rem;
+    display: block;
 }
 
-.inv-add-field input,
-.inv-add-field select {
-    padding: 0.7rem 0.9rem;
-    border-radius: 10px;
-    border: none;
-    background: #e2e6ea;
-    font-size: 0.95rem;
-    color: #202326;
-    outline: none;
+.inv-field-error {
+    display: block;
+    font-size: 0.74rem;
+    color: #b3261e;
+    font-weight: 600;
+    margin-top: 0.2rem;
 }
 
-.inv-add-field select,
-.inv-add-field .field select {
-    appearance: none;
-    background-image:
-        linear-gradient(45deg, transparent 50%, #333 50%),
-        linear-gradient(135deg, #333 50%, transparent 50%);
-    background-position: calc(100% - 18px) 50%, calc(100% - 12px) 50%;
-    background-size: 6px 6px, 6px 6px;
-    background-repeat: no-repeat;
-    background-color: #e2e6ea;
+.inv-field-error--inline {
+    display: inline;
+    margin-left: 0.5rem;
 }
 
 .inv-add-actions {
@@ -120,17 +153,6 @@
     justify-content: center;
     gap: 1.5rem;
     flex-shrink: 0;
-}
-
-.inv-add-side {
-    background: #006657;
-    color: #ffffff;
-    padding: 2.8rem 2.6rem 1.8rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    overflow-y: auto;
-    scrollbar-width: none;
 }
 
 .inv-add-side-top {
@@ -221,71 +243,15 @@
     display: none;
 }
 
-.inv-add-field .field {
-    margin-bottom: 0;
-}
-
-.inv-add-field .field label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #555b60;
-    text-transform: none;
-    letter-spacing: normal;
-}
-
-.inv-add-field .field input,
-.inv-add-field .field select {
-    width: 100%;
-    padding: 0.7rem 0.9rem;
-    border-radius: 10px;
-    border: none;
-    background: #e2e6ea;
-    font-size: 0.95rem;
-    color: #202326;
-    outline: none;
-    border-bottom: none;
-}
-
-.inv-add-estado-label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #555b60;
-    margin-bottom: 0.35rem;
-    display: block;
-}
-
-.inv-add-field--error .field input,
-.inv-add-field--error .field select {
-    border-bottom: 2px solid #b3261e !important;
-    background: #fff8f7 !important;
-}
-
-.inv-field-error {
-    display: block;
-    font-size: 0.74rem;
-    color: #b3261e;
-    font-weight: 600;
-    margin-top: 0.2rem;
-}
-
-.inv-field-error--inline {
-    display: inline;
-    margin-left: 0.5rem;
-}
-
 @media (max-width: 768px) {
     .inv-add-card {
         grid-template-columns: 1fr !important;
-        grid-template-areas:
-            "side"
-            "main";
+        grid-template-areas: "side" "main";
         width: 92vw !important;
         max-width: 92vw !important;
         height: auto !important;
         max-height: 88dvh;
         border-radius: 20px;
-        overflow: hidden;
-        box-sizing: border-box;
         display: flex !important;
         flex-direction: column !important;
     }
@@ -341,10 +307,6 @@
         flex-shrink: 0;
     }
 
-    .inv-add-side-toggle:hover {
-        background: rgba(255, 255, 255, 0.25);
-    }
-
     .inv-add-side-image--mobile {
         display: flex !important;
     }
@@ -397,13 +359,7 @@
         padding: 1rem 1.2rem 1rem !important;
         flex: 1;
         min-height: 0;
-        overflow: hidden;
         height: auto !important;
-    }
-
-    .inv-add-header {
-        flex-shrink: 0;
-        margin-bottom: 0.2rem;
     }
 
     .inv-add-header h2 {
@@ -415,19 +371,8 @@
         font-size: 0.78rem !important;
     }
 
-    .inv-add-form-scroll {
-        flex: 1;
-        min-height: 0;
-        overflow-y: auto;
-        padding-right: 0.2rem;
-    }
-
     .inv-add-grid {
         grid-template-columns: 1fr !important;
-    }
-
-    .inv-add-field-full {
-        grid-column: 1 !important;
     }
 
     .inv-add-actions {

@@ -13,12 +13,19 @@
     grid-template-columns: 1fr;
     width: 1100px;
     max-width: 96vw;
-    height: 680px;
+    height: 85vh;
+    max-height: 720px;
+    display: flex;
+    flex-direction: column;
 }
 
 .inv-detalle-main {
     background: #ffffff;
     padding: 2.4rem 2.8rem 2rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
 }
 
 .inv-detalle-header {
@@ -27,6 +34,7 @@
     justify-content: space-between;
     gap: 1.5rem;
     margin-bottom: 0.9rem;
+    flex-shrink: 0;
 }
 
 .inv-detalle-header h2 {
@@ -64,10 +72,39 @@
     background: #c6922b;
     border-radius: 999px;
     margin: 0.4rem 0 1.4rem;
+    flex-shrink: 0;
 }
 
 .inv-detalle-separador-bottom {
-    margin: 2.1rem 0 0.8rem;
+    margin: 1.4rem 0 0.8rem;
+    flex-shrink: 0;
+}
+
+.inv-detalle-scroll-area {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 0.8rem;
+    margin-right: -0.4rem;
+    scrollbar-width: thin;
+    scrollbar-color: #c4d0c4 transparent;
+}
+
+.inv-detalle-scroll-area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.inv-detalle-scroll-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.inv-detalle-scroll-area::-webkit-scrollbar-thumb {
+    background: #c4d0c4;
+    border-radius: 999px;
+}
+
+.inv-detalle-scroll-area::-webkit-scrollbar-thumb:hover {
+    background: #aebaae;
 }
 
 .inv-detalle-icon-wrap {
@@ -136,6 +173,7 @@
     align-items: center;
     justify-content: space-between;
     margin-top: 0.4rem;
+    flex-shrink: 0;
 }
 
 .inv-detalle-footnote {
@@ -158,50 +196,24 @@
     .inv-add-card-detalle {
         width: 92vw !important;
         max-width: 92vw !important;
-        height: auto !important;
-        max-height: 88dvh;        
+        height: 88dvh !important;
+        max-height: 88dvh !important;
         border-radius: 20px;
-        display: flex;
-        flex-direction: column;
     }
 
     .inv-detalle-main {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        overflow: hidden;        
         padding: 1.4rem 1.2rem 1rem;
     }
 
-    .inv-detalle-header {
-        flex-shrink: 0;
-    }
-
-    .inv-detalle-separador {
-        flex-shrink: 0;
-    }
-
     .inv-detalle-icon-wrap {
-        flex-shrink: 0;
         margin-bottom: 1rem;
     }
 
-    .inv-detalle-section {
-        overflow-y: auto;
-        flex: 1;
-        min-height: 0;           
-        padding-right: 0.3rem;
-        scrollbar-width: thin;
-        scrollbar-color: #c4d0c4 transparent;
-    }
-
     .inv-detalle-separador-bottom {
-        flex-shrink: 0;
         margin-top: 0.8rem;
     }
 
     .inv-detalle-footer {
-        flex-shrink: 0;
         padding-bottom: 0.5rem;
     }
 
