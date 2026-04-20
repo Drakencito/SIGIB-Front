@@ -1,5 +1,15 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
-import { MessageSquare, Plus, Send, CheckCircle2, TicketIcon, ArrowLeft, Search, Paperclip, ShieldAlert } from 'lucide-react'
+import {
+    MessageSquare,
+    Plus,
+    Send,
+    CheckCircle2,
+    TicketIcon,
+    ArrowLeft,
+    Search,
+    Paperclip,
+    ShieldAlert
+} from 'lucide-react'
 import { useAuth } from '../../lib/store/AuthContext'
 import { useToast } from '../../lib/store/ToastContext'
 import { UNIDADES } from '../../lib/constants/unidades'
@@ -207,23 +217,25 @@ export default function Tickets() {
     const [filtroEstado, setFiltroEstado] = useState<'abierto' | 'resuelto'>('abierto')
     const [busqueda, setBusqueda] = useState('')
     const [selectedId, setSelectedId] = useState<number | null>(null)
-    
-    // Modal state
+
     const [isCreating, setIsCreating] = useState(false)
     const [nuevoTitulo, setNuevoTitulo] = useState('')
     const [nuevaDesc, setNuevaDesc] = useState('')
     const [nuevaPrio, setNuevaPrio] = useState<Prioridad>('media')
 
-    // Input state
     const [mensajeInput, setMensajeInput] = useState('')
 
-    // Búsqueda y filtrado
     const ticketsVisibles = useMemo(() => {
         return tickets.filter(t => {
             const matchUser = esAdmin || t.cluesSolicitante === miClues
             const matchEstado = t.estado === filtroEstado
-            const matchBusqueda = t.titulo.toLowerCase().includes(busqueda.toLowerCase()) || 
-                                  t.cluesSolicitante.toLowerCase().includes(busqueda.toLowerCase())
+            const textoBusqueda = busqueda.toLowerCase()
+
+            const matchBusqueda =
+                t.titulo.toLowerCase().includes(textoBusqueda) ||
+                t.cluesSolicitante.toLowerCase().includes(textoBusqueda) ||
+                t.descripcion.toLowerCase().includes(textoBusqueda)
+
             return matchUser && matchEstado && matchBusqueda
         })
     }, [tickets, filtroEstado, busqueda, esAdmin, miClues])
@@ -236,12 +248,12 @@ export default function Tickets() {
 
     const handleCrearTicket = (e: React.FormEvent) => {
         e.preventDefault()
-        if (!nuevoTitulo || !nuevaDesc) return
+        if (!nuevoTitulo.trim() || !nuevaDesc.trim()) return
 
         const nuevoTicket: Ticket = {
             id: Date.now(),
-            titulo: nuevoTitulo,
-            descripcion: nuevaDesc,
+            titulo: nuevoTitulo.trim(),
+            descripcion: nuevaDesc.trim(),
             cluesSolicitante: miClues,
             prioridad: nuevaPrio,
             estado: 'abierto',
@@ -250,7 +262,7 @@ export default function Tickets() {
                 {
                     id: Date.now(),
                     autor: miClues,
-                    texto: nuevaDesc,
+                    texto: nuevaDesc.trim(),
                     hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 }
             ]
@@ -277,26 +289,33 @@ export default function Tickets() {
             hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
 
-        setTickets(prev => prev.map(t => 
-            t.id === ticketActivo.id 
-                ? { ...t, mensajes: [...t.mensajes, nuevoMensaje] }
-                : t
-        ))
+        setTickets(prev =>
+            prev.map(t =>
+                t.id === ticketActivo.id
+                    ? { ...t, mensajes: [...t.mensajes, nuevoMensaje] }
+                    : t
+            )
+        )
+
         setMensajeInput('')
     }
 
     const handleResolver = () => {
         if (!ticketActivo) return
-        setTickets(prev => prev.map(t => 
-            t.id === ticketActivo.id ? { ...t, estado: 'resuelto' } : t
-        ))
+
+        setTickets(prev =>
+            prev.map(t =>
+                t.id === ticketActivo.id ? { ...t, estado: 'resuelto' } : t
+            )
+        )
+
         addToast('Ticket marcado como resuelto. Conversación cerrada.', 'success')
     }
 
     const prioridadColor = {
-        alta: { bg: '#ffebee', text: '#c62828' },
-        media: { bg: '#fff4e5', text: '#e65100' },
-        baja: { bg: '#e8f5e9', text: '#2e7d32' }
+        alta: { bg: '#fdeceb', text: '#b3261e' },
+        media: { bg: '#fff3df', text: '#9a5a00' },
+        baja: { bg: '#e8f4ed', text: '#2f6f44' }
     }
 
     return (
@@ -307,31 +326,32 @@ export default function Tickets() {
             </header>
 
             <div className="tk-layout">
-                {/* PANEL IZQUIERDO: Lista de Tickets */}
                 <aside className="tk-sidebar">
                     <div className="tk-sidebar-top">
                         <Button variant="primary" fullWidth size="md" onClick={() => setIsCreating(true)}>
                             <Plus size={18} /> Abrir Nuevo Ticket
                         </Button>
+
                         <div className="tk-tabs">
-                            <button 
+                            <button
                                 className={`tk-tab ${filtroEstado === 'abierto' ? 'tk-tab--active' : ''}`}
                                 onClick={() => setFiltroEstado('abierto')}
                             >
                                 Activos
                             </button>
-                            <button 
+                            <button
                                 className={`tk-tab ${filtroEstado === 'resuelto' ? 'tk-tab--active' : ''}`}
                                 onClick={() => setFiltroEstado('resuelto')}
                             >
                                 Resueltos
                             </button>
                         </div>
+
                         <div className="tk-search">
                             <Search size={16} className="tk-search-icon" />
-                            <input 
-                                type="text" 
-                                placeholder="Buscar ticket..." 
+                            <input
+                                type="text"
+                                placeholder="Buscar ticket..."
                                 value={busqueda}
                                 onChange={e => setBusqueda(e.target.value)}
                             />
@@ -349,25 +369,37 @@ export default function Tickets() {
                                 const unidad = UNIDADES.find(u => u.clues === t.cluesSolicitante)
                                 const lastMsg = t.mensajes[t.mensajes.length - 1]
                                 const isUnread = t.estado === 'abierto' && lastMsg?.autor !== (esAdmin ? 'admin' : miClues)
-                                
+
                                 return (
-                                    <div 
-                                        key={t.id} 
+                                    <div
+                                        key={t.id}
                                         className={`tk-card ${selectedId === t.id ? 'tk-card--active' : ''}`}
                                         onClick={() => setSelectedId(t.id)}
                                     >
-                                        <div className="tk-avatar" style={{ background: isUnread ? '#c6922b' : '#006657' }}>
+                                        <div className="tk-avatar" style={{ background: isUnread ? '#b58122' : '#006657' }}>
                                             {esAdmin ? t.cluesSolicitante.slice(-2) : 'ST'}
                                         </div>
+
                                         <div className="tk-card-content">
                                             <div className="tk-card-top">
                                                 <h3 className="tk-card-title">#{t.id} - {t.titulo}</h3>
                                                 <span className="tk-card-date">{lastMsg?.hora || t.fechaCreacion}</span>
                                             </div>
-                                            {esAdmin && <span style={{display: 'block', fontSize: '0.75rem', color: '#7b8f73', marginBottom: '0.2rem'}}>{unidad?.nombre}</span>}
-                                            <p className="tk-card-desc" style={{ fontWeight: isUnread ? 700 : 400, color: isUnread ? '#1a2e2b' : '#6f746e' }}>
+
+                                            {esAdmin && (
+                                                <span className="tk-card-unit">{unidad?.nombre}</span>
+                                            )}
+
+                                            <p
+                                                className="tk-card-desc"
+                                                style={{
+                                                    fontWeight: isUnread ? 700 : 500,
+                                                    color: isUnread ? '#162824' : '#5e6962'
+                                                }}
+                                            >
                                                 {lastMsg?.texto || 'Sin mensajes'}
                                             </p>
+
                                             <Badge style={{ backgroundColor: prioridadColor[t.prioridad].bg, color: prioridadColor[t.prioridad].text }}>
                                                 {t.prioridad.toUpperCase()}
                                             </Badge>
@@ -379,13 +411,12 @@ export default function Tickets() {
                     </div>
                 </aside>
 
-                {/* PANEL DERECHO: Chat del Ticket */}
                 <main className={`tk-chat-area ${selectedId ? 'tk-chat-area--open' : ''}`}>
                     {!ticketActivo ? (
                         <div className="tk-chat-empty">
                             <MessageSquare size={64} opacity={0.15} color="#006657" />
-                            <h3 style={{color: '#1a2e2b', margin: 0}}>Selecciona un ticket</h3>
-                            <p style={{marginTop: 0}}>Elige una conversación de la lista para continuar o abre un nuevo ticket.</p>
+                            <h3 style={{ color: '#1a2e2b', margin: 0 }}>Selecciona un ticket</h3>
+                            <p style={{ marginTop: 0 }}>Elige una conversación de la lista para continuar o abre un nuevo ticket.</p>
                         </div>
                     ) : (
                         <>
@@ -394,16 +425,21 @@ export default function Tickets() {
                                     <button className="tk-mobile-back" onClick={() => setSelectedId(null)}>
                                         <ArrowLeft size={22} />
                                     </button>
-                                    <div className="tk-avatar" style={{ width: '42px', height: '42px', boxShadow: 'none' }}>
+
+                                    <div className="tk-avatar" style={{ width: '42px', height: '42px', boxShadow: 'none', borderRadius: '14px' }}>
                                         {esAdmin ? ticketActivo.cluesSolicitante.slice(-2) : 'ST'}
                                     </div>
+
                                     <div className="tk-chat-header-texts">
                                         <h2>#{ticketActivo.id} - {ticketActivo.titulo}</h2>
                                         <span className="tk-chat-header-sub">
-                                            {esAdmin ? UNIDADES.find(u => u.clues === ticketActivo.cluesSolicitante)?.nombre : 'Soporte Técnico Administrador'}
+                                            {esAdmin
+                                                ? UNIDADES.find(u => u.clues === ticketActivo.cluesSolicitante)?.nombre
+                                                : 'Soporte Técnico Administrador'}
                                         </span>
                                     </div>
                                 </div>
+
                                 {ticketActivo.estado === 'abierto' && (
                                     <Button variant="secondary" size="sm" onClick={handleResolver}>
                                         <CheckCircle2 size={16} /> Marcar Resuelto
@@ -413,17 +449,25 @@ export default function Tickets() {
 
                             <div className="tk-chat-messages">
                                 <div className="tk-context-banner">
-                                    <h4><ShieldAlert size={15} /> Descripción del Problema</h4>
+                                    <h4>
+                                        <ShieldAlert size={15} />
+                                        Motivo del ticket
+                                    </h4>
                                     <p>{ticketActivo.descripcion}</p>
                                 </div>
 
                                 {ticketActivo.mensajes.map(msg => {
                                     const isMine = esAdmin ? msg.autor === 'admin' : msg.autor !== 'admin'
+
                                     return (
-                                        <div key={msg.id} className={`tk-bubble-wrap ${isMine ? 'tk-bubble-wrap--mine' : 'tk-bubble-wrap--other'}`}>
+                                        <div
+                                            key={msg.id}
+                                            className={`tk-bubble-wrap ${isMine ? 'tk-bubble-wrap--mine' : 'tk-bubble-wrap--other'}`}
+                                        >
                                             <span className="tk-bubble-author">
                                                 {isMine ? 'Tú' : (msg.autor === 'admin' ? 'Soporte Técnico' : 'Unidad Médica')}
                                             </span>
+
                                             <div className={`tk-bubble ${isMine ? 'tk-bubble--mine' : 'tk-bubble--other'}`}>
                                                 {msg.texto}
                                                 <span className="tk-bubble-time">{msg.hora}</span>
@@ -431,17 +475,19 @@ export default function Tickets() {
                                         </div>
                                     )
                                 })}
+
                                 <div ref={chatEndRef} />
                             </div>
 
                             {ticketActivo.estado === 'abierto' ? (
                                 <div className="tk-chat-input-area">
                                     <div className="tk-chat-input-wrapper">
-                                        <button className="tk-chat-btn-attach" title="Adjuntar archivo">
+                                        <button className="tk-chat-btn-attach" title="Adjuntar archivo" type="button">
                                             <Paperclip size={20} />
                                         </button>
-                                        <textarea 
-                                            rows={1} 
+
+                                        <textarea
+                                            rows={1}
                                             placeholder="Escribe un mensaje..."
                                             value={mensajeInput}
                                             onChange={e => {
@@ -456,10 +502,12 @@ export default function Tickets() {
                                                 }
                                             }}
                                         />
-                                        <button 
-                                            className="tk-chat-btn-send" 
-                                            onClick={handleEnviarMensaje} 
+
+                                        <button
+                                            className="tk-chat-btn-send"
+                                            onClick={handleEnviarMensaje}
                                             disabled={!mensajeInput.trim()}
+                                            type="button"
                                         >
                                             <Send size={18} style={{ marginLeft: '-2px' }} />
                                         </button>
@@ -476,37 +524,39 @@ export default function Tickets() {
                 </main>
             </div>
 
-            {/* MODAL: Crear Ticket */}
             {isCreating && (
                 <Modal onClose={() => setIsCreating(false)}>
                     <div className="tk-modal-card">
                         <div className="tk-modal-top"></div>
                         <div className="tk-modal-gold"></div>
-                        
+
                         <div className="tk-modal-content">
                             <header className="tk-modal-header">
                                 <div className="tk-modal-icon">
                                     <TicketIcon size={28} />
                                 </div>
+
                                 <div className="tk-modal-header-texts">
                                     <h2>Abrir Ticket</h2>
                                     <p>Describe el problema para recibir soporte técnico.</p>
                                 </div>
                             </header>
 
-                            <form onSubmit={handleCrearTicket} style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                                <FormField 
-                                    id="titulo" 
-                                    label="Título del problema" 
-                                    placeholder="Ej. Falla en impresora de urgencias"
-                                    value={nuevoTitulo}
-                                    onChange={e => setNuevoTitulo(e.target.value)}
-                                    required
-                                />
-                                
-                                <div className="tk-modal-textarea-wrapper">
+                            <form onSubmit={handleCrearTicket} className="tk-modal-form">
+                                <div className="tk-modal-input-wrap">
+                                    <FormField
+                                        id="titulo"
+                                        label="Título del problema"
+                                        placeholder="Ej. Falla en impresora de urgencias"
+                                        value={nuevoTitulo}
+                                        onChange={e => setNuevoTitulo(e.target.value)}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="tk-modal-textarea-block">
                                     <label htmlFor="desc">Descripción detallada</label>
-                                    <textarea 
+                                    <textarea
                                         id="desc"
                                         className="tk-modal-textarea"
                                         placeholder="Describe qué sucede, desde cuándo, y qué equipo está afectado..."
@@ -516,22 +566,35 @@ export default function Tickets() {
                                     />
                                 </div>
 
-                                <SelectField 
-                                    id="prio" 
-                                    label="Nivel de prioridad"
-                                    value={nuevaPrio}
-                                    onChange={e => setNuevaPrio(e.target.value as Prioridad)}
-                                >
-                                    <option value="baja">Baja (Dudas, consultas generales)</option>
-                                    <option value="media">Media (Falla de equipo no crítico)</option>
-                                    <option value="alta">Alta (Urgencia, red caída, equipo vital)</option>
-                                </SelectField>
+                                <div className="tk-modal-select-wrap">
+                                    <SelectField
+                                        id="prio"
+                                        label="Nivel de prioridad"
+                                        value={nuevaPrio}
+                                        onChange={e => setNuevaPrio(e.target.value as Prioridad)}
+                                    >
+                                        <option value="baja">Baja (Dudas, consultas generales)</option>
+                                        <option value="media">Media (Falla de equipo no crítico)</option>
+                                        <option value="alta">Alta (Urgencia, red caída, equipo vital)</option>
+                                    </SelectField>
+                                </div>
 
                                 <div className="tk-modal-actions">
-                                    <Button variant="secondary" size="md" type="button" onClick={() => setIsCreating(false)}>
+                                    <Button
+                                        variant="secondary"
+                                        size="md"
+                                        type="button"
+                                        onClick={() => setIsCreating(false)}
+                                    >
                                         Cancelar
                                     </Button>
-                                    <Button variant="primary" size="md" type="submit" disabled={!nuevoTitulo || !nuevaDesc}>
+
+                                    <Button
+                                        variant="primary"
+                                        size="md"
+                                        type="submit"
+                                        disabled={!nuevoTitulo.trim() || !nuevaDesc.trim()}
+                                    >
                                         Enviar Ticket
                                     </Button>
                                 </div>
