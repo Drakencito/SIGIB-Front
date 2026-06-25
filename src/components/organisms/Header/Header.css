@@ -1,131 +1,349 @@
-.header {
-    height: 60px;
+/* ── TOPBAR BASE ──────────────────────────────────── */
+.topbar {
+    height: 62px;
     background: #611232;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 2.5rem;
-    box-shadow: 0 2px 12px rgba(0, 102, 87, 0.08);
+    gap: 1.5rem;
+    padding: 0 2rem;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 200;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
 }
 
-.header-brand {
-    display: flex;
-    align-items: baseline;
-    gap: 0.8rem;
-}
-
-.header-sigib {
-    font-size: 1.4rem;
-    font-weight: 900;
-    letter-spacing: 0.15em;
-    color: #96af9a;
-}
-
-.header-sub {
-    font-size: 0.78rem;
-    color: #ffffff;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-}
-
-.header-left {
+/* ── MARCA ────────────────────────────────────────── */
+.topbar-brand {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.7rem;
+    flex-shrink: 0;
+    text-decoration: none;
 }
 
-.header-left img {
-    height: 44px;
-    object-fit: contain;
-}
-
-.header-right img {
-    height: 60px;
+.topbar-logo {
+    height: 38px;
     object-fit: contain;
     filter: brightness(0) invert(1);
 }
 
-.header-menu-btn {
+.topbar-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.topbar-sigib {
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: #d4c5a9;
+    letter-spacing: 0.14em;
+}
+
+.topbar-sub {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.65);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* ── NAV DESKTOP ─────────────────────────────────── */
+.topbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    flex: 1;
+    justify-content: center;
+}
+
+.topbar-nav-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.86rem;
+    font-weight: 600;
+    transition: background 0.16s ease, color 0.16s ease;
+    white-space: nowrap;
+}
+
+.topbar-nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.topbar-nav-item.active {
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.topbar-nav-item svg {
+    flex-shrink: 0;
+    opacity: 0.85;
+}
+
+/* ── ACCIONES DERECHA ─────────────────────────────── */
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+/* ── USUARIO DROPDOWN ─────────────────────────────── */
+.topbar-user {
+    position: relative;
+}
+
+.topbar-user-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 10px;
+    padding: 0.4rem 0.7rem 0.4rem 0.4rem;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background 0.16s ease;
+}
+
+.topbar-user-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.topbar-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.topbar-username {
+    font-size: 0.85rem;
+    font-weight: 700;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.topbar-chevron {
+    color: rgba(255, 255, 255, 0.7);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.topbar-chevron.open {
+    transform: rotate(180deg);
+}
+
+/* Dropdown */
+.topbar-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.14),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+    min-width: 200px;
+    overflow: hidden;
+    z-index: 300;
+    animation: dropdownIn 0.16s ease;
+}
+
+@keyframes dropdownIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.topbar-dropdown-info {
+    padding: 0.9rem 1rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.topbar-dropdown-info strong {
+    font-size: 0.9rem;
+    color: #132722;
+    font-weight: 800;
+}
+
+.topbar-dropdown-info span {
+    font-size: 0.76rem;
+    color: #7a8b80;
+}
+
+.topbar-dropdown-divider {
+    height: 1px;
+    background: #f0f2f0;
+}
+
+.topbar-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: transparent;
+    font-size: 0.87rem;
+    font-weight: 600;
+    color: #374740;
+    cursor: pointer;
+    transition: background 0.14s ease;
+    text-align: left;
+}
+
+.topbar-dropdown-item:hover {
+    background: #f4f6f4;
+}
+
+.topbar-dropdown-item.danger {
+    color: #9b2247;
+}
+
+.topbar-dropdown-item.danger:hover {
+    background: #fdf0f4;
+}
+
+/* ── HAMBURGER ────────────────────────────────────── */
+.topbar-hamburger {
     display: none;
     align-items: center;
     justify-content: center;
-    background: transparent;
-    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
     color: #ffffff;
     cursor: pointer;
-    padding: 0.3rem;
-    border-radius: 8px;
-    transition: background 0.15s;
+    transition: background 0.15s ease;
 }
 
-.header-menu-btn:hover {
+.topbar-hamburger:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+/* ── MOBILE MENU ─────────────────────────────────── */
+.topbar-mobile-menu {
+    display: none;
+    position: sticky;
+    top: 62px;
+    z-index: 190;
+    background: #4d0e26;
+    padding: 0.6rem 1rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+    flex-direction: column;
+    gap: 0.2rem;
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.topbar-mobile-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem 0.9rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.93rem;
+    font-weight: 600;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.topbar-mobile-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.topbar-mobile-item.active {
     background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-weight: 800;
 }
 
-@media (max-width: 768px) {
-    .header {
-        padding: 0 1rem;
-    }
+.topbar-mobile-item.danger {
+    color: #f4a8b8;
+}
 
-    .header-menu-btn {
-        display: flex;
-    }
+.topbar-mobile-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 0.3rem 0;
+}
 
-    .header-sub {
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 900px) {
+    .topbar-nav {
         display: none;
     }
 
-    .header-sigib {
-        font-size: 1.1rem;
+    .topbar-hamburger {
+        display: flex;
     }
 
-    .header-left img {
-        height: 34px;
+    .topbar-mobile-menu {
+        display: flex;
     }
 
-    .header-right img {
-        height: 48px;
+    .topbar-username {
+        display: none;
+    }
+
+    .topbar-sub {
+        display: none;
     }
 }
 
 @media (max-width: 480px) {
-    .header-sigib {
-        display: none;
-    }
-
-    .header-right img {
-        height: 40px;
-    }
-}
-
-@media (max-width: 600px) {
-    .header {
+    .topbar {
         padding: 0 1rem;
-        gap: 0.5rem;
+        gap: 0.75rem;
     }
 
-    .header-brand {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.1rem;
+    .topbar-sigib {
+        font-size: 1rem;
     }
 
-    .header-sigib {
-        font-size: 1.1rem;
-    }
-
-    .header-sub {
-        font-size: 0.62rem;
-    }
-
-    .header-left img {
-        height: 32px;
-    }
-
-    .header-right img {
-        height: 44px;
+    .topbar-logo {
+        height: 30px;
     }
 }

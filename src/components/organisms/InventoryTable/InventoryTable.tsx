@@ -10,15 +10,24 @@ import './InventoryTable.css'
 
 export interface InventoryTableProps {
     items: ItemInventario[]
-    busqueda?: string         
+    busqueda?: string
     onRowClick?: (id: number) => void
     onEdit?: (id: number) => void
     onDelete?: (id: number) => void
     onClearFilters?: () => void
 }
 
-type SortKey = 'marca' | 'noSerie' | 'categoria' | 'departamento' | 'clues'
+type SortKey = 'marca' | 'noSerie' | 'categoria' | 'estado' | 'clues'
 type SortDir = 'asc' | 'desc' | null
+
+const ESTADO_ORDEN: Record<string, number> = { M: 1, R: 2, B: 3, F: 4 }
+const ESTADO_LABEL: Record<string, string> = { F: 'Funcional', B: 'Bueno', R: 'Regular', M: 'Malo' }
+const ESTADO_COLOR: Record<string, string> = {
+    F: '#3a7d44',
+    B: '#006657',
+    R: '#c6922b',
+    M: '#9b2247',
+}
 
 const getUnidadNombre = (clues: string) =>
     UNIDADES.find(u => u.clues === clues)?.nombre ?? clues
@@ -36,6 +45,17 @@ function Highlight({ text, query }: { text: string; query?: string }) {
     )
 }
 
+function EstadoBadge({ estado }: { estado: string }) {
+    const label = ESTADO_LABEL[estado] ?? estado
+    const color = ESTADO_COLOR[estado] ?? '#888'
+    return (
+        <span className="inv-estado-badge" style={{ '--estado-color': color } as React.CSSProperties}>
+            <span className="inv-estado-dot" />
+            {label}
+        </span>
+    )
+}
+
 function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey | null; sortDir: SortDir }) {
     if (sortKey !== col) return <ChevronsUpDown size={13} className="inv-sort-icon inv-sort-icon--idle" />
     if (sortDir === 'asc') return <ChevronUp size={13} className="inv-sort-icon inv-sort-icon--active" />
@@ -43,7 +63,7 @@ function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey | 
 }
 
 const InventoryTable: FC<InventoryTableProps> = ({
-    items, busqueda, onRowClick, onEdit, onDelete, onClearFilters
+    items, busqueda, onRowClick, onEdit, onDelete, onClearFilters,
 }) => {
     const [sortKey, setSortKey] = useState<SortKey | null>(null)
     const [sortDir, setSortDir] = useState<SortDir>(null)
@@ -57,11 +77,13 @@ const InventoryTable: FC<InventoryTableProps> = ({
     const sorted = useMemo(() => {
         if (!sortKey || !sortDir) return items
         return [...items].sort((a, b) => {
+            if (sortKey === 'estado') {
+                const diff = (ESTADO_ORDEN[a.estado] ?? 0) - (ESTADO_ORDEN[b.estado] ?? 0)
+                return sortDir === 'asc' ? diff : -diff
+            }
             const av = sortKey === 'clues' ? getUnidadNombre(a.clues) : a[sortKey]
             const bv = sortKey === 'clues' ? getUnidadNombre(b.clues) : b[sortKey]
-            return sortDir === 'asc'
-                ? av.localeCompare(bv, 'es')
-                : bv.localeCompare(av, 'es')
+            return sortDir === 'asc' ? av.localeCompare(bv, 'es') : bv.localeCompare(av, 'es')
         })
     }, [items, sortKey, sortDir])
 
@@ -74,9 +96,9 @@ const InventoryTable: FC<InventoryTableProps> = ({
     if (items.length === 0) {
         return (
             <div className="inv-empty-state">
-                <PackageSearch size={56} strokeWidth={1.3} className="inv-empty-icon" />
+                <PackageSearch size={48} className="inv-empty-icon" />
                 <h3>Sin resultados</h3>
-                <p>No se encontraron equipos con los filtros aplicados.</p>
+                <p>No hay equipos que coincidan con los filtros aplicados.</p>
                 {onClearFilters && (
                     <Button variant="secondary" size="sm" onClick={onClearFilters}>
                         Limpiar filtros
@@ -95,8 +117,8 @@ const InventoryTable: FC<InventoryTableProps> = ({
                             {th('Marca / Modelo', 'marca')}
                             {th('No. Serie', 'noSerie')}
                             {th('Categoría', 'categoria')}
-                            {th('Departamento', 'departamento')}
-                            {th('Unidad médica', 'clues')}
+                            {th('Estado', 'estado')}
+                            {th('Unidad Médica', 'clues')}
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -117,29 +139,34 @@ const InventoryTable: FC<InventoryTableProps> = ({
                                 <td data-label="Categoría">
                                     <Badge>{item.categoria}</Badge>
                                 </td>
-                                <td data-label="Departamento">
-                                    <Highlight text={item.departamento} query={busqueda} />
+                                <td data-label="Estado">
+                                    <EstadoBadge estado={item.estado} />
                                 </td>
-                                <td data-label="Unidad médica">
+                                <td data-label="Unidad Médica">
                                     <span className="inv-clues-nombre">
-                                        <Highlight text={getUnidadNombre(item.clues)} query={busqueda} />
+                                        {getUnidadNombre(item.clues)}
                                     </span>
                                     <span className="inv-clues-code">{item.clues}</span>
                                 </td>
-                                <td data-label="Acciones">
-                                    <div className="inv-acciones" onClick={e => e.stopPropagation()}>
-                                        <IconButton aria-label="Editar" onClick={() => onEdit?.(item.id)}>
-                                            <Pencil size={18} />
+                                <td data-label="Acciones" onClick={e => e.stopPropagation()}>
+                                    <div className="inv-acciones">
+                                        <IconButton
+                                            aria-label="Editar"
+                                            onClick={() => onEdit?.(item.id)}
+                                        >
+                                            <Pencil size={16} />
                                         </IconButton>
-                                        <IconButton variant="danger" aria-label="Eliminar" onClick={() => onDelete?.(item.id)}>
-                                            <Trash2 size={18} />
+                                        <IconButton
+                                            aria-label="Eliminar"
+                                            onClick={() => onDelete?.(item.id)}
+                                        >
+                                            <Trash2 size={16} />
                                         </IconButton>
                                     </div>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
-
                 </table>
             </div>
         </div>

@@ -4,34 +4,8 @@
     min-height: 100vh;
 }
 
-.layout-body {
-    display: flex;
-    flex: 1;
-    position: relative;
-}
-
 .layout-main {
     flex: 1;
-    background: #F3F3E7;
-    padding-left: calc(64px + 1.5rem);
+    background: #f3f3e7;
     min-width: 0;
-}
-
-.layout-overlay {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .layout-main {
-        padding-left: 0;
-    }
-
-    .layout-overlay {
-        display: block;
-        position: fixed;
-        inset: 0;
-        top: 60px;
-        background: rgba(0, 0, 0, 0.45);
-        z-index: 140;
-    }
 }

@@ -1,17 +1,48 @@
-import { Monitor, Wifi, Droplets, Wrench } from "lucide-react";
-import type { ReactNode } from "react";
-import type { CategoriaInventario } from "../types/types";
+import {
+    Monitor,
+    Network,
+    Package,
+    Wrench,
+} from 'lucide-react'
+import type { CategoriaInventario } from '../types/types'
+import type { ReactNode } from 'react'
 
-export const categoriaLabel: Record<CategoriaInventario, string> = {
-    equipo_computo: "Equipo de cómputo",
-    equipo_red: "Equipo de red",
-    consumible: "Consumible",
-    refaccion: "Refacción",
-};
+interface CategoriaInfo {
+    label: string
+    icono: ReactNode
+    color: string
+}
 
-export const categoriaIcono: Record<CategoriaInventario, ReactNode> = {
-    equipo_computo: <Monitor size={16} />,
-    equipo_red: <Wifi size={16} />,
-    consumible: <Droplets size={16} />,
-    refaccion: <Wrench size={16} />,
-};
+const categoriaUI: Record<CategoriaInventario, CategoriaInfo> = {
+    equipocomputo: {
+        label: 'Equipo de Cómputo',
+        icono: <Monitor size={28} />,
+        color: '006657',
+    },
+    equipored: {
+        label: 'Equipo de Red',
+        icono: <Network size={28} />,
+        color: '1565c0',
+    },
+    consumible: {
+        label: 'Consumible',
+        icono: <Package size={28} />,
+        color: 'c6922b',
+    },
+    refaccion: {
+        label: 'Refacción',
+        icono: <Wrench size={28} />,
+        color: '6a1e55',
+    },
+}
+
+export const categoriaLabel = (cat: CategoriaInventario): string =>
+    categoriaUI[cat]?.label ?? cat
+
+export const categoriaIcono = (cat: CategoriaInventario): ReactNode =>
+    categoriaUI[cat]?.icono ?? null
+
+export const categoriaColor = (cat: CategoriaInventario): string =>
+    categoriaUI[cat]?.color ?? '006657'
+
+export default categoriaUI

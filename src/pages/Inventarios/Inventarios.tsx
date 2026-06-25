@@ -1,7 +1,6 @@
-import { Search, Plus, Monitor, Wifi, Droplets, Wrench, Group } from 'lucide-react'
-import type { CategoriaInventario, EstadoInventario } from '../../lib/types/types'
-import { categoriaLabel } from '../../lib/constants/categoriaUI'
-import { estadoLabel } from '../../components/molecules/EstadoBar/EstadoBar'
+import { useState } from 'react'
+import { Search, Plus, Monitor, Wifi, Droplets, Wrench, Group, FileUp } from 'lucide-react'
+import type { CategoriaInventario, EstadoInventario, ItemInventario } from '../../lib/types/types'
 import { UNIDADES } from '../../lib/constants/unidades'
 import { exportarCSV } from '../../lib/utils/exportCsv'
 import { useInventario } from '../../lib/hooks/useInventario'
@@ -14,6 +13,7 @@ import ConfirmDeleteModal from '../../components/organisms/ConfirmDeleteModal/Co
 import InventoryForm from '../../components/organisms/InventoryForm/InventoryForm'
 import InventoryDetail from '../../components/organisms/InventoryDetail/InventoryDetail'
 import InventoryTable from '../../components/organisms/InventoryTable/InventoryTable'
+import ImportExcelModal from '../../components/organisms/ImportExcelModal/ImportExcelModal'
 import './Inventarios.css'
 
 function Inventarios() {
@@ -30,7 +30,10 @@ function Inventarios() {
         soloLectura,
         estadoForm, setEstadoForm,
         abrirCrear, abrirDetalle, abrirEditar, cerrarFormulario,
+        importarItems,
     } = useInventario()
+
+    const [abiertaImportacion, setAbiertaImportacion] = useState(false)
 
     const stats = [
         {
@@ -39,23 +42,23 @@ function Inventarios() {
             titulo: 'Total',
             subtitulo: `${items.length} Unidades`,
             numero: items.length,
-            cat: '',
+            cat: '' as CategoriaInventario | '',
         },
         {
-            id: 'equipo_computo',
+            id: 'equipocomputo',
             icono: <Monitor size={28} />,
             titulo: 'Cómputo',
-            subtitulo: `${items.filter(i => i.categoria === 'equipo_computo').length} Equipos`,
-            numero: items.filter(i => i.categoria === 'equipo_computo').length,
-            cat: 'equipo_computo',
+            subtitulo: `${items.filter(i => i.categoria === 'equipocomputo').length} Equipos`,
+            numero: items.filter(i => i.categoria === 'equipocomputo').length,
+            cat: 'equipocomputo' as CategoriaInventario,
         },
         {
-            id: 'equipo_red',
+            id: 'equipored',
             icono: <Wifi size={28} />,
             titulo: 'Red',
-            subtitulo: `${items.filter(i => i.categoria === 'equipo_red').length} Dispositivos`,
-            numero: items.filter(i => i.categoria === 'equipo_red').length,
-            cat: 'equipo_red',
+            subtitulo: `${items.filter(i => i.categoria === 'equipored').length} Dispositivos`,
+            numero: items.filter(i => i.categoria === 'equipored').length,
+            cat: 'equipored' as CategoriaInventario,
         },
         {
             id: 'consumible',
@@ -63,7 +66,7 @@ function Inventarios() {
             titulo: 'Consumibles',
             subtitulo: `${items.filter(i => i.categoria === 'consumible').length} Piezas`,
             numero: items.filter(i => i.categoria === 'consumible').length,
-            cat: 'consumible',
+            cat: 'consumible' as CategoriaInventario,
         },
         {
             id: 'refaccion',
@@ -71,9 +74,14 @@ function Inventarios() {
             titulo: 'Refacciones',
             subtitulo: `${items.filter(i => i.categoria === 'refaccion').length} Piezas`,
             numero: items.filter(i => i.categoria === 'refaccion').length,
-            cat: 'refaccion',
+            cat: 'refaccion' as CategoriaInventario,
         },
     ]
+
+    const handleImport = (nuevos: Omit<ItemInventario, 'id'>[]) => {
+        importarItems(nuevos)
+        setAbiertaImportacion(false)
+    }
 
     return (
         <div className="inv-page">
@@ -86,6 +94,9 @@ function Inventarios() {
                 <div className="inv-header-actions">
                     <Button variant="secondary" size="md" onClick={() => exportarCSV(datos)}>
                         Exportar CSV
+                    </Button>
+                    <Button variant="secondary" size="md" onClick={() => setAbiertaImportacion(true)}>
+                        <FileUp size={17} /> Importar Excel
                     </Button>
                     <Button variant="primary" size="md" onClick={abrirCrear}>
                         <Plus size={18} /> Agregar equipo
@@ -102,7 +113,7 @@ function Inventarios() {
                         subtitulo={card.subtitulo}
                         numero={card.numero}
                         activo={filtCat === card.cat}
-                        onClick={() => handleStatClick(card.cat)}
+                        onClick={() => handleStatClick(card.cat as CategoriaInventario | '')}
                     />
                 ))}
             </div>
@@ -121,18 +132,20 @@ function Inventarios() {
                     onChange={e => setFiltCat(e.target.value as CategoriaInventario | '')}
                 >
                     <option value="">Todas las categorías</option>
-                    {Object.entries(categoriaLabel).map(([k, v]) => (
-                        <option key={k} value={k}>{v}</option>
-                    ))}
+                    <option value="equipocomputo">Equipo de Cómputo</option>
+                    <option value="equipored">Equipo de Red</option>
+                    <option value="consumible">Consumible</option>
+                    <option value="refaccion">Refacción</option>
                 </Select>
                 <Select
                     value={filtEstado}
                     onChange={e => setFiltEstado(e.target.value as EstadoInventario | '')}
                 >
                     <option value="">Todos los estados</option>
-                    {Object.entries(estadoLabel).map(([k, v]) => (
-                        <option key={k} value={k}>{v}</option>
-                    ))}
+                    <option value="F">Funcional</option>
+                    <option value="B">Bueno</option>
+                    <option value="R">Regular</option>
+                    <option value="M">Malo</option>
                 </Select>
                 <Select
                     value={filtClues}
@@ -155,6 +168,7 @@ function Inventarios() {
             />
             <p className="inv-count">{datos.length} de {items.length} registros</p>
 
+            {/* ── Modal: Confirmar eliminación ── */}
             {itemAEliminar !== null && (
                 <Modal onClose={() => setItemAEliminar(null)}>
                     <ConfirmDeleteModal
@@ -164,6 +178,7 @@ function Inventarios() {
                 </Modal>
             )}
 
+            {/* ── Modal: Formulario / Detalle ── */}
             {abiertoFormulario && (
                 <Modal onClose={cerrarFormulario}>
                     {soloLectura
@@ -180,6 +195,15 @@ function Inventarios() {
                 </Modal>
             )}
 
+            {/* ── Modal: Importar Excel ── */}
+            {abiertaImportacion && (
+                <Modal onClose={() => setAbiertaImportacion(false)}>
+                    <ImportExcelModal
+                        onCancel={() => setAbiertaImportacion(false)}
+                        onImport={handleImport}
+                    />
+                </Modal>
+            )}
 
         </div>
     )

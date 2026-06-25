@@ -13,7 +13,6 @@ import FormField from '../../components/molecules/Formfield/FormField'
 import SelectField from '../../components/molecules/SelectField/SelectField'
 import Input from '../../components/atoms/Input/Input'
 import SummaryCard from '../../components/molecules/SummaryCard/SummaryCard'
-
 import '../../components/organisms/InventoryForm/InventoryForm.css'
 import '../../components/organisms/InventoryDetail/InventoryDetail.css'
 import './Solicitudes.css'
@@ -27,7 +26,7 @@ const CATALOGO_ITEMS: Record<CategoriaInventario, string[]> = {
         'Resma de Hojas Blancas Tamaño Carta',
         'Caja de Guantes de Látex'
     ],
-    equipo_computo: [
+    equipocomputo: [
         'Computadora de Escritorio (Estándar)',
         'Laptop para trabajo en campo',
         'Impresora Multifuncional B/N',
@@ -35,7 +34,7 @@ const CATALOGO_ITEMS: Record<CategoriaInventario, string[]> = {
         'Monitor LED 24"',
         'Kit Teclado y Mouse USB'
     ],
-    equipo_red: [
+    equipored: [
         'Switch de 16 puertos Gigabit',
         'Router Inalámbrico Básico',
         'Punto de Acceso WiFi (Access Point)',
@@ -51,20 +50,19 @@ const CATALOGO_ITEMS: Record<CategoriaInventario, string[]> = {
 
 const MOCK_SOLICITUDES: SolicitudRecurso[] = [
     { id: 1, cluesSolicitante: 'CSIMB000035', categoria: 'consumible', cantidad: 3, modelo: 'Tóner Brother TN-1060 (HL-1200)', descripcion: 'Para imprimir recetas en urgencias', estado: 'pendiente', fecha: '2026-04-06' },
-    { id: 2, cluesSolicitante: 'CSIMB000076', categoria: 'equipo_computo', cantidad: 1, modelo: 'Impresora Multifuncional B/N', descripcion: 'Reemplazo de equipo dañado', estado: 'aprobada', fecha: '2026-04-05' },
-    { id: 3, cluesSolicitante: 'CSIMB000303', categoria: 'equipo_red', cantidad: 1, modelo: 'Switch de 16 puertos Gigabit', descripcion: 'Ampliación de red en consultorios', estado: 'rechazada', fecha: '2026-04-01' }
+    { id: 2, cluesSolicitante: 'CSIMB000076', categoria: 'equipocomputo', cantidad: 1, modelo: 'Impresora Multifuncional B/N', descripcion: 'Reemplazo de equipo dañado', estado: 'aprobada', fecha: '2026-04-05' },
+    { id: 3, cluesSolicitante: 'CSIMB000303', categoria: 'equipored', cantidad: 1, modelo: 'Switch de 16 puertos Gigabit', descripcion: 'Ampliación de red en consultorios', estado: 'rechazada', fecha: '2026-04-01' }
 ]
 
 export default function Solicitudes() {
     const auth = useAuth()
     const usuario = auth?.usuario
     const { addToast } = useToast()
-    
+
     const esAdmin = usuario?.rol === 'admin'
-    const miClues = usuario?.clues || 'CSIMB000035' 
+    const miClues = usuario?.clues || 'CSIMB000035'
 
     const [solicitudes, setSolicitudes] = useState<SolicitudRecurso[]>(MOCK_SOLICITUDES)
-
     const [isCreating, setIsCreating] = useState(false)
     const [viewingSolicitud, setViewingSolicitud] = useState<SolicitudRecurso | null>(null)
     const [deletingId, setDeletingId] = useState<number | null>(null)
@@ -80,16 +78,13 @@ export default function Solicitudes() {
         return solicitudes.filter(s => {
             if (!esAdmin && s.cluesSolicitante !== miClues) return false
             if (filtroEstado !== 'todas' && s.estado !== filtroEstado) return false
-            
             if (busqueda) {
                 const q = busqueda.toLowerCase()
                 const unidad = UNIDADES.find(u => u.clues === s.cluesSolicitante)
-                
                 const matchModelo = s.modelo.toLowerCase().includes(q)
                 const matchClues = s.cluesSolicitante.toLowerCase().includes(q)
                 const matchUnidad = unidad?.nombre.toLowerCase().includes(q)
-                const matchCategoria = categoriaLabel[s.categoria]?.toLowerCase().includes(q)
-                
+                const matchCategoria = categoriaLabel(s.categoria).toLowerCase().includes(q)
                 if (!matchModelo && !matchClues && !matchUnidad && !matchCategoria) return false
             }
             return true
@@ -101,14 +96,11 @@ export default function Solicitudes() {
     const handleCrearSolicitud = (e: React.FormEvent) => {
         e.preventDefault()
         if (!catSeleccionada || !itemSeleccionado || cantidad < 1) return
-        
         if (itemSeleccionado === 'Otro' && !itemOtro.trim()) {
             addToast('Especifica manualmente el artículo que necesitas', 'error')
             return
         }
-
         const modeloFinal = itemSeleccionado === 'Otro' ? itemOtro.trim() : itemSeleccionado
-
         const nueva: SolicitudRecurso = {
             id: Date.now(),
             cluesSolicitante: miClues,
@@ -119,7 +111,6 @@ export default function Solicitudes() {
             estado: 'pendiente',
             fecha: new Date().toISOString().split('T')[0]
         }
-
         setSolicitudes([nueva, ...solicitudes])
         setIsCreating(false)
         setCatSeleccionada('')
@@ -127,7 +118,6 @@ export default function Solicitudes() {
         setItemOtro('')
         setCantidad(1)
         setNotas('')
-
         addToast('Solicitud creada y enviada con éxito', 'success')
     }
 
@@ -150,8 +140,8 @@ export default function Solicitudes() {
                 <div className="sol-header-texts">
                     <h1>Solicitudes de Insumos</h1>
                     <p>
-                        {esAdmin 
-                            ? 'Gestiona y aprueba las peticiones de recursos de todas las unidades.' 
+                        {esAdmin
+                            ? 'Gestiona y aprueba las peticiones de recursos de todas las unidades.'
                             : 'Solicita equipo de cómputo, refacciones o consumibles para tu unidad.'}
                     </p>
                 </div>
@@ -200,8 +190,8 @@ export default function Solicitudes() {
             <div className="sol-toolbar">
                 <div className="sol-search">
                     <Search size={18} className="sol-search-icon" />
-                    <Input 
-                        type="text" 
+                    <Input
+                        type="text"
                         placeholder="Buscar por artículo o unidad médica..."
                         value={busqueda}
                         onChange={e => setBusqueda(e.target.value)}
@@ -217,7 +207,7 @@ export default function Solicitudes() {
                             <h3>No hay resultados</h3>
                             <p>No se encontraron solicitudes con los filtros o búsqueda actuales.</p>
                             {(busqueda || filtroEstado !== 'todas') && (
-                                <Button variant="secondary" size="sm" onClick={() => { setBusqueda(''); setFiltroEstado('todas'); }}>
+                                <Button variant="secondary" size="sm" onClick={() => { setBusqueda(''); setFiltroEstado('todas') }}>
                                     Limpiar filtros
                                 </Button>
                             )}
@@ -238,33 +228,27 @@ export default function Solicitudes() {
                                 <tbody>
                                     {listaFiltrada.map(sol => {
                                         const unidadInfo = UNIDADES.find(u => u.clues === sol.cluesSolicitante)
-                                        
                                         return (
                                             <tr key={sol.id} onClick={() => setViewingSolicitud(sol)}>
                                                 <td>{sol.fecha}</td>
-                                                
                                                 {esAdmin && (
                                                     <td>
                                                         <span className="inv-clues-nombre">{unidadInfo?.nombre}</span>
                                                         <span className="inv-clues-code">{sol.cluesSolicitante}</span>
                                                     </td>
                                                 )}
-                                                
                                                 <td>
                                                     <span className="inv-marca">{sol.modelo}</span>
                                                     <span className="inv-modelo">
-                                                        {categoriaLabel[sol.categoria]} • {sol.descripcion}
+                                                        {categoriaLabel(sol.categoria)} • {sol.descripcion}
                                                     </span>
                                                 </td>
-                                                
                                                 <td><strong>{sol.cantidad}</strong></td>
-                                                
                                                 <td>
                                                     {sol.estado === 'pendiente' && <Badge style={{ backgroundColor: '#fff4e5', color: '#e65100' }}>Pendiente</Badge>}
                                                     {sol.estado === 'aprobada' && <Badge style={{ backgroundColor: '#e8f5e9', color: '#2e7d32' }}><CheckCircle size={14} /> Aprobada</Badge>}
                                                     {sol.estado === 'rechazada' && <Badge style={{ backgroundColor: '#ffebee', color: '#c62828' }}><XCircle size={14} /> Rechazada</Badge>}
                                                 </td>
-
                                                 <td>
                                                     <div className="inv-acciones" onClick={e => e.stopPropagation()}>
                                                         {esAdmin && sol.estado === 'pendiente' && (
@@ -277,7 +261,6 @@ export default function Solicitudes() {
                                                                 </Button>
                                                             </>
                                                         )}
-                                                        
                                                         {!esAdmin && sol.estado === 'pendiente' && (
                                                             <Button variant="icon-red" onClick={() => setDeletingId(sol.id)} title="Cancelar solicitud">
                                                                 <Trash2 size={18} />
@@ -295,16 +278,16 @@ export default function Solicitudes() {
                 </div>
             </div>
 
+            {/* ── Modal: Nueva Solicitud ── */}
             {isCreating && (
                 <Modal onClose={() => setIsCreating(false)}>
                     <div className="inv-add-card">
                         <aside className="inv-add-side">
                             <div className="inv-add-side-top">
                                 <div className="inv-add-side-body">
-                                    <h3>Indicaciones para la<br /> <span>Solicitud</span></h3>
+                                    <h3>Indicaciones para la<br /><span>Solicitud</span></h3>
                                 </div>
                             </div>
-
                             <div className="inv-add-side-list-wrap inv-add-side-list-wrap--open">
                                 <ul className="inv-add-side-list">
                                     <li>
@@ -321,8 +304,7 @@ export default function Solicitudes() {
                                     </li>
                                 </ul>
                             </div>
-
-                            <div className="inv-add-side-bar"></div>
+                            <div className="inv-add-side-bar" />
                         </aside>
 
                         <div className="inv-add-main">
@@ -330,9 +312,7 @@ export default function Solicitudes() {
                                 <h2>Nueva Solicitud</h2>
                                 <p>Captura los datos del recurso que necesitas.</p>
                             </header>
-
-                            <div className="inv-add-separador"></div>
-
+                            <div className="inv-add-separador" />
                             <div className="inv-add-form-scroll">
                                 <form id="sol-form" onSubmit={handleCrearSolicitud}>
                                     <div className="inv-add-grid">
@@ -349,9 +329,10 @@ export default function Solicitudes() {
                                                 required
                                             >
                                                 <option value="">-- Elige una categoría --</option>
-                                                {Object.entries(categoriaLabel).map(([k, v]) => (
-                                                    <option key={k} value={k}>{v}</option>
-                                                ))}
+                                                <option value="equipocomputo">Equipo de Cómputo</option>
+                                                <option value="equipored">Equipo de Red</option>
+                                                <option value="consumible">Consumible</option>
+                                                <option value="refaccion">Refacción</option>
                                             </SelectField>
                                         </div>
 
@@ -365,7 +346,7 @@ export default function Solicitudes() {
                                                 required
                                             >
                                                 <option value="">{catSeleccionada ? '-- Selecciona qué necesitas --' : 'Primero elige una categoría'}</option>
-                                                {catSeleccionada && CATALOGO_ITEMS[catSeleccionada as CategoriaInventario].map(item => (
+                                                {catSeleccionada && CATALOGO_ITEMS[catSeleccionada].map(item => (
                                                     <option key={item} value={item}>{item}</option>
                                                 ))}
                                                 {catSeleccionada && (
@@ -414,9 +395,7 @@ export default function Solicitudes() {
                                     </div>
                                 </form>
                             </div>
-
-                            <div className="inv-add-separador inv-add-separador--bottom"></div>
-
+                            <div className="inv-add-separador inv-add-separador--bottom" />
                             <div className="inv-add-actions">
                                 <Button variant="secondary" size="md" type="button" onClick={() => setIsCreating(false)}>
                                     Cancelar
@@ -430,6 +409,7 @@ export default function Solicitudes() {
                 </Modal>
             )}
 
+            {/* ── Modal: Detalle Solicitud ── */}
             {viewingSolicitud && (
                 <Modal onClose={() => setViewingSolicitud(null)}>
                     <div className="inv-add-card inv-add-card-detalle">
@@ -447,27 +427,25 @@ export default function Solicitudes() {
                                 </div>
                             </header>
 
-                            <div className="inv-detalle-separador"></div>
+                            <div className="inv-detalle-separador" />
 
                             <div className="inv-detalle-scroll-area">
                                 <div className="inv-detalle-icon-wrap">
                                     <div className="inv-detalle-icon-circle">
-                                        {categoriaIcono[viewingSolicitud.categoria]}
+                                        {categoriaIcono(viewingSolicitud.categoria)}
                                     </div>
                                 </div>
-
                                 <div className="inv-detalle-section">
                                     <div className="inv-detalle-row">
                                         <div className="inv-detalle-card">
                                             <span className="inv-detalle-label">Categoría</span>
-                                            <span className="inv-detalle-value">{categoriaLabel[viewingSolicitud.categoria]}</span>
+                                            <span className="inv-detalle-value">{categoriaLabel(viewingSolicitud.categoria)}</span>
                                         </div>
                                         <div className="inv-detalle-card">
                                             <span className="inv-detalle-label">Cantidad</span>
                                             <span className="inv-detalle-value">{viewingSolicitud.cantidad} unidades</span>
                                         </div>
                                     </div>
-
                                     <div className="inv-detalle-row">
                                         <div className="inv-detalle-card">
                                             <span className="inv-detalle-label">Estado</span>
@@ -480,7 +458,6 @@ export default function Solicitudes() {
                                             <span className="inv-detalle-value">{viewingSolicitud.fecha}</span>
                                         </div>
                                     </div>
-
                                     <div className="inv-detalle-row">
                                         <div className="inv-detalle-card inv-detalle-card-full">
                                             <span className="inv-detalle-label">Justificación / Observaciones</span>
@@ -490,7 +467,7 @@ export default function Solicitudes() {
                                 </div>
                             </div>
 
-                            <div className="inv-detalle-separador inv-detalle-separador-bottom"></div>
+                            <div className="inv-detalle-separador inv-detalle-separador-bottom" />
 
                             <footer className="inv-detalle-footer">
                                 <div className="inv-detalle-footer-center">
@@ -504,6 +481,7 @@ export default function Solicitudes() {
                 </Modal>
             )}
 
+            {/* ── Modal: Confirmar eliminación ── */}
             {deletingId && (
                 <Modal onClose={() => setDeletingId(null)}>
                     <ConfirmDeleteModal

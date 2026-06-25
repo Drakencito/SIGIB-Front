@@ -1,0 +1,329 @@
+/* Estructura Base */
+.imp-card {
+    background: #fff;
+    border-radius: 28px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: width 0.3s ease;
+    margin: auto;
+}
+
+.imp-card--upload {
+    width: 880px;
+}
+
+/* Modal más ancho para la guía */
+.imp-card--wide {
+    width: 1200px;
+    max-height: 92vh;
+}
+
+.imp-header {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.8rem 2.2rem 0.5rem;
+}
+
+.imp-header-icon {
+    width: 48px;
+    height: 48px;
+    background: #f0fdfa;
+    color: #0d9488;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+}
+
+.imp-header-text h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0;
+}
+
+.imp-header-text p {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-top: 0.2rem;
+}
+
+.imp-filename-text {
+    font-weight: 700;
+    color: #0d9488 !important;
+}
+
+.imp-close {
+    margin-left: auto;
+    background: #f1f5f9;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #94a3b8;
+    transition: 0.2s;
+}
+
+.imp-close:hover {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+.imp-separador {
+    height: 4px;
+    background: #fbbf24;
+    margin: 1.2rem 2.2rem;
+    border-radius: 10px;
+}
+
+.imp-body-scroll {
+    overflow-y: auto;
+    max-height: 60vh;
+    padding: 0 2.2rem;
+}
+
+/* Dropzone */
+.imp-dropzone {
+    border: 2px dashed #cbd5e1;
+    background: #f8fafc;
+    border-radius: 24px;
+    padding: 3rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.imp-dropzone:hover,
+.imp-dropzone--drag {
+    border-color: #0d9488;
+    background: #f0fdfa;
+}
+
+.imp-dropzone-icon {
+    color: #0d9488;
+    margin-bottom: 1rem;
+}
+
+.imp-dropzone h3 {
+    margin: 0;
+    color: #1e293b;
+    font-weight: 700;
+}
+
+.imp-dropzone p {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.imp-dropzone-badge {
+    display: inline-block;
+    margin-top: 1rem;
+    background: #e2e8f0;
+    padding: 0.4rem 1rem;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #475569;
+}
+
+/* --- REDISEÑO DE LA GUÍA --- */
+.imp-guia-container {
+    margin: 1.5rem 0 2rem;
+}
+
+.imp-guia-toggle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 1.1rem 1.5rem;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    font-weight: 700;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.imp-guia-toggle:hover {
+    border-color: #0d9488;
+    background: #f8fafc;
+}
+
+.imp-guia-toggle.open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-color: #0d9488;
+}
+
+.imp-guia-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    /* Columnas anchas */
+    gap: 1px;
+    background: #e2e8f0;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    overflow: hidden;
+}
+
+.imp-guia-card {
+    background: #fff;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.imp-guia-tag code {
+    display: inline-block;
+    background: #f1f5f9;
+    color: #0f172a;
+    padding: 0.3rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    border: 1px solid #e2e8f0;
+    word-break: break-all;
+    /* Para que nombres larguísimos no se salgan */
+}
+
+.imp-guia-txt {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+/* Preview y Tabla */
+.imp-resumen {
+    display: flex;
+    gap: 0.8rem;
+    padding: 0 2.2rem 1.2rem;
+}
+
+.imp-pill {
+    padding: 0.5rem 1.2rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.imp-pill.ok {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.imp-pill.err {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.imp-pill.total {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.imp-tabla-wrap {
+    flex: 1;
+    overflow: auto;
+    margin: 0 2.2rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+}
+
+.imp-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.imp-tabla thead th {
+    background: #f8fafc;
+    padding: 1rem;
+    text-align: left;
+    color: #475569;
+    font-weight: 700;
+    position: sticky;
+    top: 0;
+    border-bottom: 2px solid #e2e8f0;
+    z-index: 10;
+}
+
+.imp-tabla td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.fila-err td {
+    background: #fff8f8;
+}
+
+.imp-st {
+    padding: 0.3rem 0.7rem;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.7rem;
+}
+
+.st-f {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.st-b {
+    background: #e0f2fe;
+    color: #075985;
+}
+
+.st-r {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.st-m {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.badg-ok {
+    color: #0d9488;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badg-err {
+    color: #ef4444;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.imp-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.8rem 2.2rem;
+}
+
+.imp-mono {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: #0f172a;
+}
+
+.imp-txt-truncate {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

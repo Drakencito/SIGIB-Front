@@ -1,82 +1,64 @@
 import { useState, useEffect, useCallback } from 'react'
-import { ChevronLeft, ChevronRight, Package, FileText, Ticket } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { ChevronLeft, ChevronRight, CalendarDays, BellRing, Clock } from 'lucide-react'
 import './Carousel.css'
 
 interface Slide {
   image: string
-  badge: string
+  tipo: string
   icono: React.ReactNode
   titulo: string
-  subtitulo: string
-  features: string[]
+  descripcion: string
+  detalle: string
+  fechaLabel: string
+  fecha: string
   acento: string
-  ruta: string
-  cta: string
-  meta: string
 }
 
 const slides: Slide[] = [
   {
     image:
       'https://pplx-res.cloudinary.com/image/upload/pplx_search_images/3e56afdb9ac184bc32b1166cf87f73f8d647847e.jpg',
-    badge: 'Módulo 01 · Inventario',
-    icono: <Package size={22} />,
-    titulo: 'Gestión de Inventarios',
-    subtitulo:
-      'Registra, consulta y da seguimiento a todos los activos institucionales: equipos de cómputo, red, consumibles y refacciones.',
-    features: [
-      'Categorización por tipo de equipo y unidad',
-      'Seguimiento de estado: bueno, regular, malo',
-      'Historial de cambios y resguardos por área',
-    ],
-    acento: '#4ecfb8',
-    ruta: '/inventarios',
-    cta: 'Ir a Inventarios',
-    meta: 'Control de activos',
+    tipo: 'Convocatoria activa',
+    icono: <CalendarDays size={20} />,
+    titulo: 'Solicitudes Q2 2026 abiertas',
+    descripcion:
+      'La ventana de captura para el segundo trimestre está disponible. Registra tus solicitudes de insumos, equipos y materiales antes del cierre.',
+    detalle: 'Aplica para todas las unidades médicas del padrón IMSS Bienestar.',
+    fechaLabel: 'Cierre de captura',
+    fecha: '30 de mayo de 2026',
+    acento: '#f7d88c',
   },
   {
     image:
       'https://pplx-res.cloudinary.com/image/upload/pplx_search_images/893eb62ed67961edd6a5be18cee2ed14add2e213.jpg',
-    badge: 'Módulo 02 · Solicitudes',
-    icono: <FileText size={22} />,
-    titulo: 'Solicitudes de Recursos',
-    subtitulo:
-      'Captura y gestiona solicitudes institucionales de insumos, equipo y materiales por periodos programados.',
-    features: [
-      'Apertura por convocatorias trimestrales',
-      'Seguimiento de estatus por unidad médica',
-      'Historial y trazabilidad de cada solicitud',
-    ],
-    acento: '#f7d88c',
-    ruta: '/solicitudes',
-    cta: 'Ir a Solicitudes',
-    meta: 'Convocatoria periódica',
+    tipo: 'Aviso institucional',
+    icono: <BellRing size={20} />,
+    titulo: 'Actualización del catálogo de equipos',
+    descripcion:
+      'Se incorporaron nuevas categorías al catálogo de inventario: equipos de diagnóstico portátil y dispositivos de red inalámbrica.',
+    detalle: 'Verifica que tus registros estén clasificados correctamente.',
+    fechaLabel: 'Vigente desde',
+    fecha: '1 de mayo de 2026',
+    acento: '#4ecfb8',
   },
   {
     image:
       'https://pplx-res.cloudinary.com/image/upload/pplx_search_images/ec0064f07320de1ed25ee5f996109888abf728b1.jpg',
-    badge: 'Módulo 03 · Soporte',
-    icono: <Ticket size={22} />,
-    titulo: 'Tickets de Soporte',
-    subtitulo:
-      'Reporta incidencias técnicas y da seguimiento a cada caso con conversación centralizada entre unidades y soporte.',
-    features: [
-      'Apertura rápida con motivo y prioridad',
-      'Chat por ticket con historial completo',
-      'Seguimiento de resolución en tiempo real',
-    ],
+    tipo: 'Recordatorio',
+    icono: <Clock size={20} />,
+    titulo: 'Cierre de tickets sin actividad',
+    descripcion:
+      'Los tickets sin respuesta por más de 15 días hábiles serán cerrados automáticamente. Revisa tus casos abiertos y actualiza su estatus.',
+    detalle: 'Puedes reabrir un ticket cerrado en los siguientes 5 días.',
+    fechaLabel: 'Aplica a partir del',
+    fecha: '15 de mayo de 2026',
     acento: '#f9a88c',
-    ruta: '/tickets',
-    cta: 'Ir a Tickets',
-    meta: 'Atención técnica',
   },
 ]
 
 function Carousel() {
   const [actual, setActual] = useState<number>(0)
   const [pausado, setPausado] = useState<boolean>(false)
-  const navigate = useNavigate()
 
   const siguiente = useCallback(() => {
     setActual((prev) => (prev + 1) % slides.length)
@@ -88,7 +70,7 @@ function Carousel() {
 
   useEffect(() => {
     if (pausado) return
-    const timer = setInterval(siguiente, 5500)
+    const timer = setInterval(siguiente, 6000)
     return () => clearInterval(timer)
   }, [pausado, siguiente])
 
@@ -99,8 +81,9 @@ function Carousel() {
       className="carousel"
       onMouseEnter={() => setPausado(true)}
       onMouseLeave={() => setPausado(false)}
-      aria-label="Módulos del sistema"
+      aria-label="Avisos institucionales"
     >
+      {/* Track — solo imágenes */}
       <div
         className="carousel-track"
         style={{ transform: `translateX(-${actual * 100}%)` }}
@@ -116,24 +99,16 @@ function Carousel() {
         ))}
       </div>
 
+      {/* Contenido — fijo encima de todas las slides */}
       <div className="carousel-content-layer">
         <div className="carousel-main">
           <span className="carousel-badge">
             {slide.icono}
-            {slide.badge}
+            {slide.tipo}
           </span>
-
           <h2>{slide.titulo}</h2>
-          <p>{slide.subtitulo}</p>
-
-          <button
-            type="button"
-            className="carousel-cta"
-            onClick={() => navigate(slide.ruta)}
-          >
-            {slide.cta}
-            <ChevronRight size={17} />
-          </button>
+          <p>{slide.descripcion}</p>
+          <p className="carousel-detalle">{slide.detalle}</p>
         </div>
 
         <aside
@@ -141,30 +116,24 @@ function Carousel() {
           style={{ ['--slide-acento' as string]: slide.acento }}
         >
           <div className="carousel-sidecard-top">
-            <span className="carousel-sidecard-label">¿Qué puedes hacer?</span>
-            <span className="carousel-sidecard-meta">{slide.meta}</span>
+            <span className="carousel-sidecard-label">Fecha importante</span>
+            <span className="carousel-sidecard-meta">{slide.tipo}</span>
           </div>
-
-          <strong className="carousel-sidecard-title">{slide.titulo}</strong>
-
-          <ul className="carousel-features">
-            {slide.features.map((f, i) => (
-              <li key={i}>
-                <span className="carousel-feature-dot" />
-                {f}
-              </li>
-            ))}
-          </ul>
+          <strong className="carousel-sidecard-title">{slide.fechaLabel}</strong>
+          <div className="carousel-fecha-grande">{slide.fecha}</div>
+          <div className="carousel-sidecard-divider" />
+          <p className="carousel-sidecard-nota">{slide.detalle}</p>
         </aside>
       </div>
 
+      {/* Controles en franja inferior */}
       <div className="carousel-controls">
         <div className="carousel-arrows">
           <button
             type="button"
             className="carousel-arrow"
             onClick={anterior}
-            aria-label="Módulo anterior"
+            aria-label="Aviso anterior"
           >
             <ChevronLeft size={20} />
           </button>
@@ -172,7 +141,7 @@ function Carousel() {
             type="button"
             className="carousel-arrow"
             onClick={siguiente}
-            aria-label="Módulo siguiente"
+            aria-label="Aviso siguiente"
           >
             <ChevronRight size={20} />
           </button>
@@ -185,10 +154,10 @@ function Carousel() {
               type="button"
               className={`carousel-dot ${i === actual ? 'active' : ''}`}
               onClick={() => setActual(i)}
-              aria-label={`Ir a ${s.titulo}`}
+              aria-label={`Ir a: ${s.titulo}`}
             >
               <span className="carousel-dot-pip" />
-              <small>{s.badge.split(' · ')[1]}</small>
+              <small>{s.tipo}</small>
             </button>
           ))}
         </div>

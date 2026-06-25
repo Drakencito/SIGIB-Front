@@ -224,6 +224,23 @@
     font-style: normal;
 }
 
+.inv-estado-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--estado-color);
+}
+
+.inv-estado-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--estado-color);
+    flex-shrink: 0;
+}
+
 @media (max-width: 768px) {
 
     .inv-tabla-scroll {

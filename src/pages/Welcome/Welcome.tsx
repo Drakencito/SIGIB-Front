@@ -1,15 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 import {
-  Package,
-  FileText,
-  Ticket,
   CalendarRange,
   Megaphone,
   Newspaper,
   ShieldCheck,
   Clock3,
   ArrowRight,
-  Sparkles,
+  CalendarDays,
   Wrench,
   PackageCheck,
   BellRing,
@@ -18,30 +15,6 @@ import { useAuth } from '../../lib/store/AuthContext'
 import Carousel from '../../components/organisms/Carousel/Carousel'
 import Button from '../../components/atoms/Button/Button'
 import './Welcome.css'
-
-const modulos = [
-  {
-    to: '/inventarios',
-    icon: Package,
-    titulo: 'Gestión de Inventarios',
-    desc: 'Administra equipos, insumos y recursos materiales del sistema de salud.',
-    acento: '#006657',
-  },
-  {
-    to: '/solicitudes',
-    icon: FileText,
-    titulo: 'Solicitudes de Recursos',
-    desc: 'Registra, consulta y da seguimiento a solicitudes institucionales.',
-    acento: '#9b2247',
-  },
-  {
-    to: '/tickets',
-    icon: Ticket,
-    titulo: 'Tickets de Soporte',
-    desc: 'Crea y atiende incidencias técnicas con seguimiento claro y ordenado.',
-    acento: '#a57f2c',
-  },
-]
 
 const anuncios = [
   {
@@ -99,19 +72,11 @@ function Welcome() {
   const { usuario } = useAuth()
   const navigate = useNavigate()
 
-  const fecha = new Date().toLocaleDateString('es-MX', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-
   return (
     <div className="welcome-page">
       <section className="welcome-hero-shell">
         <div className="welcome-header">
           <div>
-            <span className="welcome-fecha">{fecha}</span>
             <h1>
               Hola, <strong>{usuario?.nombre ?? 'Bienvenido'}</strong>
             </h1>
@@ -122,8 +87,15 @@ function Welcome() {
           </div>
 
           <div className="welcome-header-pill">
-            <Sparkles size={16} />
-            <span>Panel activo</span>
+            <CalendarDays size={16} />
+            <span>
+              {new Date().toLocaleDateString('es-MX', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })}
+            </span>
           </div>
         </div>
 
@@ -300,41 +272,6 @@ function Welcome() {
         </div>
       </section>
 
-      <section className="welcome-modules-section">
-        <div className="welcome-panel-head">
-          <div>
-            <span className="welcome-panel-kicker">Accesos</span>
-            <h2>Módulos principales</h2>
-          </div>
-          <ArrowRight size={20} />
-        </div>
-
-        <div className="welcome-modulos">
-          {modulos.map(({ to, icon: Icon, titulo, desc, acento }) => (
-            <article
-              key={to}
-              className="modulo-card"
-              onClick={() => navigate(to)}
-              style={{ ['--mod-accent' as string]: acento }}
-            >
-              <div className="modulo-card-top" />
-              <div className="modulo-img">
-                <div className="modulo-icon-shell">
-                  <Icon size={38} strokeWidth={1.6} />
-                </div>
-              </div>
-              <div className="modulo-info">
-                <h3>{titulo}</h3>
-                <p>{desc}</p>
-                <span className="modulo-link">
-                  Entrar al módulo
-                  <ArrowRight size={16} />
-                </span>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
     </div>
   )
 }

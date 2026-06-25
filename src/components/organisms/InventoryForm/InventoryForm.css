@@ -243,6 +243,28 @@
     display: none;
 }
 
+.inv-add-docs-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: 1.5px dashed #c4cdc4;
+    border-radius: 10px;
+    color: #555b60;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.inv-add-docs-toggle:hover {
+    background: #f3f5f0;
+    border-color: #006657;
+    color: #006657;
+}
+
 @media (max-width: 768px) {
     .inv-add-card {
         grid-template-columns: 1fr !important;
