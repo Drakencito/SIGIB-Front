@@ -28,57 +28,60 @@ export interface Empleado {
   rol: RolEmpleado
 }
 
-// INVENTARIO
-export type CategoriaInventario =
-  | 'equipocomputo'
-  | 'equipored'
-  | 'consumible'
-  | 'refaccion'
-
-// F=Funcional, R=Regular, M=Malo, B=Bueno
-export type EstadoInventario = 'F' | 'R' | 'M' | 'B'
-
-// Alias para uso en EstadoBar y formularios — mismo tipo
+export type CategoriaInventario = 'equipocomputo' | 'equipored' | 'consumible' | 'refaccion'
+export type EstadoInventario = 'malo' | 'regular' | 'bueno'
 export type EstadoClave = EstadoInventario
-
 export type NivelAtencion = 'PRIMER NIVEL' | 'SEGUNDO NIVEL' | 'TERCER NIVEL'
 
 export interface ItemInventario {
   id: number
-  noInventario: string
-  responsable: string
-  descripcion: string
   marca: string
   modelo: string
   noSerie: string
-  entidadFederativa: string
-  clues: string
-  nombreClues: string
-  nivelAtencion: NivelAtencion
-  cucop: string
-  cabms: string
-  estado: EstadoInventario
-  observaciones: string
+  descripcion: string
   categoria: CategoriaInventario
-  fechaDocumento?: string
-  valorFactura?: number
-  valorLibros?: number
-  nombreArchivo?: string
-  remision?: string
-  actaEntrega?: string
-  fuenteOrigen?: string
+  departamento: string
+  estado: EstadoInventario
+  clues: string
+  noInventario: string
+  nombreGenerico: string
+  clasImpr: string
+  subrogado: 'SI' | 'NO'
+  nombreEmpresa: string
+  funcional: 'SI' | 'NO'
+  motivoFuncionamiento: string
+  observaciones: string
+  resguardo: string
 }
 
-// SOLICITUDES
 export type EstadoSolicitud = 'pendiente' | 'aprobada' | 'rechazada'
+export type TipoConsumible = 'toner' | 'tinta'
+export type TipoImpresora = 'laser' | 'tinta'
+export type CompatibilidadConsumible = 'original' | 'compatible' | 'original/compatible'
+
+export interface DetalleSolicitudConsumible {
+  id: number
+  tipoImpresora: TipoImpresora
+  marcaModeloImpresora: string
+  consumible: string
+  compatibilidad: CompatibilidadConsumible
+  cantidadTrimestral: number
+}
 
 export interface SolicitudRecurso {
   id: number
   cluesSolicitante: string
-  categoria: CategoriaInventario
-  cantidad: number
-  modelo: string
-  descripcion: string
+  entidadFederativa: string
+  unidadMedica: string
+  ubicacion: string
+  nombreResponsable: string
+  cargoResponsable: string
+  telefonoResponsable: string
+  correoResponsable: string
+  proveedorFotocopiado?: string
+  cantidadFotocopiadoTrimestral?: number | ''
+  observaciones: string
+  detalles: DetalleSolicitudConsumible[]
   estado: EstadoSolicitud
   fecha: string
 }
